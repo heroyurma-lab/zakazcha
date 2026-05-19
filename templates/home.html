@@ -2,694 +2,850 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Husnihat — Shaxsiy Veb-sayt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Husnihat — Qo'lyozma Generator</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;700&family=Charmonman:wght@400;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Montserrat+Subrayada&family=Reenie+Beanie&family=Nothing+You+Could+Do&family=Permanent+Marker&family=Rock+Salt&display=swap" rel="stylesheet">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        body {
-            /* Sayt orqa foni: 70% oq va 30% ko'k aralashmasidan iborat och mayin ko'k rang */
-            background-color: #e6ecf5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #dce6f5;
+            --panel-bg: #ffffff;
+            --sidebar-bg: #f0f4fb;
+            --border: #d0d8e8;
+            --accent: #2563eb;
+            --accent2: #e2574c;
+            --text: #1e293b;
+            --muted: #64748b;
+            --label: #334155;
+            --input-bg: #fff;
+            --radius: 10px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.13);
+        }
+
+        html, body {
+            height: 100%;
+            background: var(--bg);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--text);
             overflow: hidden;
         }
 
-        .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 95%;
-            max-width: 1400px;
-            height: 90vh;
-            position: relative;
+        #app {
+            display: grid;
+            grid-template-columns: 1fr 240px 1fr;
+            grid-template-rows: 1fr auto;
+            height: 100vh;
+            gap: 0;
         }
 
-        /* Chap panel - Sariq varoq */
-        .left-panel {
-            width: 30%;
+        #left-col {
+            padding: 16px 12px 16px 16px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            height: 100%;
-            padding-bottom: 20px;
-            box-sizing: border-box;
         }
 
-        .varoq-sariq {
-            background: linear-gradient(135deg, #f5f593 0%, #e1e16b 100%);
-            padding: 30px;
-            box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.3);
-            border-radius: 2px;
-            min-height: 450px;
-            color: #000000;
-            font-size: 16px;
-            line-height: 1.8;
-            word-wrap: break-word;
+        #col-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            padding-left: 2px;
+        }
+
+        #input-matn {
+            flex: 1;
+            background: linear-gradient(160deg, #f9f97a 0%, #e6e64f 100%);
             border: none;
+            border-radius: var(--radius);
+            box-shadow: 4px 6px 18px rgba(0,0,0,0.18);
+            padding: 24px 20px;
+            font-family: monospace;
+            font-size: 15px;
+            line-height: 1.75;
+            color: #1a1a1a;
             resize: none;
             outline: none;
-            font-family: monospace;
-            box-sizing: border-box;
-            margin-top: 20px;
             width: 100%;
         }
 
-        /* O'rtadagi boshqaruv paneli */
-        .settings-panel {
-            width: 25%;
+        #input-matn::placeholder { color: #888; }
+
+        #settings-col {
+            background: var(--sidebar-bg);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            padding: 10px;
+            overflow: hidden;
+        }
+
+        #settings-header {
+            padding: 14px 14px 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--label);
+            flex-shrink: 0;
+        }
+
+        #settings-scroll {
+            flex: 1;
             overflow-y: auto;
-            max-height: 90vh;
+            padding: 10px 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .settings-panel::-webkit-scrollbar {
-            width: 4px;
-        }
-        .settings-panel::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 2px;
+        #settings-scroll::-webkit-scrollbar { width: 4px; }
+        #settings-scroll::-webkit-scrollbar-thumb { background: #c7d0e0; border-radius: 4px; }
+
+        .sg { display: flex; flex-direction: column; gap: 5px; }
+
+        .sg label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
         }
 
-        .control-group {
+        .sg select, .sg input[type="color"] {
             width: 100%;
-            max-width: 220px;
-        }
-
-        .control-group label {
-            font-size: 12px;
-            color: #333333;
-            margin-bottom: 5px;
-            display: block;
-            font-weight: 500;
-        }
-
-        .control-group select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #ffffff;
-            font-size: 14px;
-            color: #333;
-        }
-
-        /* Slider stillari */
-        .slider-container {
-            width: 100%;
-            max-width: 220px;
-        }
-
-        .slider-container label {
-            font-size: 12px;
-            color: #333333;
-            margin-bottom: 5px;
-            display: block;
-            font-weight: 500;
-        }
-
-        .slider-input {
-            width: 100%;
-            margin: 0;
+            padding: 7px 8px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: var(--input-bg);
+            font-size: 13px;
+            color: var(--text);
             cursor: pointer;
         }
 
-        /* Rang tanlash elementlari */
-        .color-section {
+        .sg select:focus { outline: 2px solid var(--accent); }
+
+        .sg input[type="range"] {
             width: 100%;
-            max-width: 220px;
+            accent-color: var(--accent);
+            height: 4px;
+            cursor: pointer;
+        }
+
+        .range-row {
             display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 8px;
         }
 
-        .color-label {
+        .range-row input[type="range"] { flex: 1; }
+
+        .range-val {
             font-size: 12px;
-            color: #333333;
-            font-weight: 500;
-        }
-
-        .color-picker-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .color-picker-input {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 0;
-            cursor: pointer;
-            background: none;
+            font-weight: 600;
+            color: var(--accent);
+            min-width: 28px;
+            text-align: right;
         }
 
         .color-circles {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            width: 100%;
+            gap: 5px;
+            margin-top: 2px;
         }
 
-        .color-circle {
+        .cc {
             width: 22px;
             height: 22px;
             border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.1);
             cursor: pointer;
-            border: 1px solid rgba(0,0,0,0.15);
-            transition: transform 0.1s;
+            transition: transform 0.12s, box-shadow 0.12s;
         }
 
-        .color-circle:hover {
-            transform: scale(1.15);
-        }
+        .cc:hover { transform: scale(1.2); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+        .cc.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
 
-        /* Switcher (Toggle) o'tkazgichlari */
-        .switch-container {
-            width: 100%;
-            max-width: 220px;
+        .toggle-row {
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
+            padding: 2px 0;
         }
 
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
+        .toggle-row span {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--label);
         }
 
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider-toggle {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #b3b3b3;
-            transition: .3s;
+        .sw { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+        .sw input { opacity: 0; width: 0; height: 0; }
+        .sw-track {
+            position: absolute; inset: 0;
+            background: #b3bcc9;
             border-radius: 20px;
+            cursor: pointer;
+            transition: background .25s;
         }
-
-        .slider-toggle:before {
+        .sw-track::before {
+            content: '';
             position: absolute;
-            content: "";
-            height: 14px;
-            width: 14px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
+            width: 14px; height: 14px;
+            left: 3px; top: 3px;
+            background: #fff;
             border-radius: 50%;
+            transition: transform .25s;
         }
+        .sw input:checked + .sw-track { background: var(--accent); }
+        .sw input:checked + .sw-track::before { transform: translateX(16px); }
 
-        input:checked + .slider-toggle {
-            background-color: #e2574c;
+        #btn-yopish {
+            margin-top: 4px;
+            width: 100%;
+            padding: 9px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            transition: background .2s;
         }
+        #btn-yopish:hover { background: #1d4ed8; }
 
-        input:checked + .slider-toggle:before {
-            transform: translateX(20px);
-        }
-
-        .switch-label {
-            font-size: 14px;
-            color: #333333;
-        }
-
-        /* O'ng panel - Oq varoq va uning pastidagi tugma majmuasi */
-        .right-panel-wrapper {
-            width: 38%;
-            height: 100%;
+        #right-col {
+            padding: 16px 16px 16px 12px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             align-items: center;
-            padding-bottom: 20px;
-            box-sizing: border-box;
+            justify-content: space-between;
+            gap: 10px;
         }
 
-        /* Realistik qalin soya effekti */
-        .right-panel {
+        #varoq-wrap {
+            flex: 1;
             width: 100%;
-            background-color: #ffffff;
-            height: 85%;
-            padding: 40px;
-            box-sizing: border-box;
-            position: relative;
-            transition: background 0.3s, box-shadow 0.3s, padding-top 0.1s;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
             overflow: hidden;
-
-            /* Tashqi va to'q ichki realistik qog'oz soyasi */
-            box-shadow:
-                0px 25px 50px rgba(0, 0, 0, 0.3),
-                inset 0 0 40px rgba(0, 0, 0, 0.1);
         }
 
-        /* Qizil hoshiya chizig'i (Daftar chetidagi chiziq - Поля) */
-        .hoshiya-chiziq {
+        #a4-sizer {
+            width: 100%;
+            max-width: 520px;
+            position: relative;
+        }
+
+        #a4-sizer::before {
+            content: '';
+            display: block;
+            padding-top: calc(100% * 1.414);
+        }
+
+        #oq-varoq {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            overflow: hidden;
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.22),
+                inset 0 0 30px rgba(0,0,0,0.06);
+            transition: background .3s, box-shadow .3s;
+        }
+
+        #hoshiya {
             display: none;
             position: absolute;
-            top: 0;
-            right: 60px; /* O'ng chetdan kesib o'tadi */
+            top: 0; right: 52px;
             width: 1.5px;
             height: 100%;
-            background-color: rgba(255, 99, 71, 0.6); /* Och qizil rang */
+            background: rgba(255,80,60,0.55);
             z-index: 2;
             pointer-events: none;
         }
 
-        .natija-matn {
+        #output-matn {
+            position: absolute;
+            inset: 0;
             color: #0000ff;
             font-size: 17px;
             line-height: 2em;
-            white-space: pre-line;
+            white-space: pre-wrap;
             font-family: 'Charmonman', cursive;
             word-wrap: break-word;
-            height: 100%;
-            overflow-y: auto;
-            position: relative;
+            overflow: hidden;
             z-index: 1;
-            padding-right: 20px;
+            padding: 40px 28px 24px 36px;
             box-sizing: border-box;
+            transition: padding-top .15s;
         }
 
-        /* --- DAFTAR CHIZIQLARI ANDOZALARI --- */
-
-        /* 1. Ona tili - Gorizontal och ko'k chiziqlar (Dinamik JS orqali boshqariladi) */
-        .right-panel.ona-tili-fon {
-            background-image: linear-gradient(rgba(173, 216, 230, 0.6) 1.5px, transparent 1.5px);
+        #oq-varoq.ona-tili-fon {
+            background-image: linear-gradient(rgba(173,216,230,0.6) 1.5px, transparent 1.5px);
         }
-
-        /* 2. Matematika - Katak-katak chiziqlar (Dinamik JS orqali boshqariladi) */
-        .right-panel.matematika-fon {
+        #oq-varoq.matematika-fon {
             background-image:
-                linear-gradient(rgba(173, 216, 230, 0.5) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(173, 216, 230, 0.5) 1px, transparent 1px);
+                linear-gradient(rgba(173,216,230,0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(173,216,230,0.5) 1px, transparent 1px);
+        }
+        #oq-varoq.doira-fon {
+            background-image: radial-gradient(circle, rgba(173,216,230,0.7) 1px, transparent 1px);
         }
 
-        /* Tugmalar */
-        .btn {
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            text-align: center;
-            padding: 12px;
-        }
-
-        .btn-yopish {
-            background-color: #0000ff;
-            color: white;
+        #btn-yuklab {
+            flex-shrink: 0;
             width: 100%;
-            max-width: 220px;
+            max-width: 320px;
+            padding: 13px;
+            background: var(--accent2);
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            letter-spacing: 0.06em;
+            box-shadow: 0 4px 14px rgba(226,87,76,0.3);
+            transition: background .2s, transform .1s;
+        }
+        #btn-yuklab:hover { background: #c0392b; }
+        #btn-yuklab:active { transform: scale(0.98); }
+
+        #status-bar {
+            grid-column: 1 / -1;
+            background: #e8eef8;
+            border-top: 1px solid var(--border);
+            padding: 5px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        #mob-fab {
+            display: none;
+            position: fixed;
+            bottom: 72px;
+            right: 16px;
+            z-index: 300;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(37,99,235,0.4);
+            align-items: center;
+            justify-content: center;
+        }
+
+        #mob-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 200;
+        }
+
+        #mob-drawer {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--sidebar-bg);
+            border-radius: 20px 20px 0 0;
+            max-height: 70vh;
+            overflow-y: auto;
+            z-index: 250;
+            padding: 16px 16px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transform: translateY(100%);
+            transition: transform .3s ease;
+        }
+
+        #mob-drawer.open { transform: translateY(0); }
+
+        .drawer-handle {
+            width: 44px;
+            height: 4px;
+            background: #c7d0e0;
             border-radius: 4px;
+            margin: 0 auto 10px;
         }
 
-        /* Pastga tushirilgan yuklab olish tugmasi */
-        .btn-yuklab {
-            background-color: #e2574c;
-            color: white;
-            padding: 12px 40px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            margin-top: 15px;
-            transition: background 0.2s;
+        #mob-drawer .sg label { font-size: 12px; }
+        #mob-drawer .sg select, #mob-drawer .sg input[type="color"] { font-size: 14px; padding: 9px 10px; }
+
+        @media (max-width: 860px) {
+            html, body { overflow: auto; }
+
+            #app {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                overflow: visible;
+            }
+
+            #settings-col { display: none; }
+            #mob-fab { display: flex; }
+
+            #left-col {
+                padding: 12px 12px 8px;
+                height: auto;
+            }
+
+            #input-matn {
+                min-height: 160px;
+                flex: none;
+                font-size: 14px;
+            }
+
+            #right-col {
+                padding: 8px 12px 80px;
+                flex: 1;
+                min-height: 70vw;
+            }
+
+            #a4-sizer { max-width: 100%; }
+
+            #output-matn {
+                font-size: 13px;
+                line-height: 1.8em;
+                padding: 24px 16px 16px 22px;
+            }
+
+            #btn-yuklab {
+                position: fixed;
+                bottom: 12px;
+                left: 12px;
+                right: 12px;
+                width: auto;
+                max-width: none;
+                z-index: 100;
+                border-radius: 12px;
+            }
+
+            #status-bar { display: none; }
         }
 
-        .btn-yuklab:active {
-            background-color: #c0392b;
+        @media (max-width: 480px) {
+            #input-matn { min-height: 130px; font-size: 13px; }
+            #output-matn { font-size: 12px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+<div id="app">
 
-        <div class="left-panel">
-            <textarea id="input-matn" class="varoq-sariq" placeholder="Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...">Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing</textarea>
-        </div>
-
-        <div class="settings-panel">
-            <div class="control-group">
-                <label>Shrifftlar</label>
-                <select id="select-shrift">
-                    <optgroup label="✨ CHIROYLI QO'LYOZMAlar">
-                        <option value="'Charmonman', cursive" selected>Charmonman (Silliq va chiroyli)</option>
-                        <option value="'Marck Script', cursive">Marck Script (Chiroyli qiyiq yozuv)</option>
-                        <option value="'Bad Script', cursive">Bad Script (Maktab husnihati)</option>
-                        <option value="'Caveat', cursive">Caveat (Tushunarli qo'lyozma)</option>
-                        <option value="'Kalam', handwriting">Kalam (Chiroyli ruchka yozuvi)</option>
-                    </optgroup>
-                    <optgroup label="✍️ XUNUKROQ / SHOSHILINCH QO'LYOZMAlar">
-                        <option value="'Reenie Beanie', cursive">Reenie Beanie (Juda ingichka va xunuk)</option>
-                        <option value="'Nothing You Could Do', cursive">Nothing You Could Do (Tartibsiz xat)</option>
-                        <option value="'Rock Salt', cursive">Rock Salt (Shoshinch shifokor yozuvi)</option>
-                        <option value="'Permanent Marker', sans-serif">Permanent Marker (Qalin va bo'g'iq)</option>
-                        <option value="'Montserrat Subrayada', sans-serif">Subrayada (G'alati va parokanda)</option>
-                    </optgroup>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label>Matn kattaligi</label>
-                <select id="select-size">
-                    <option value="15px">15</option>
-                    <option value="16px">16</option>
-                    <option value="17px" selected>17</option>
-                    <option value="18px">18</option>
-                    <option value="19px">19</option>
-                    <option value="20px">20</option>
-                    <option value="21px">21</option>
-                    <option value="22px">22</option>
-                    <option value="23px">23</option>
-                    <option value="24px">24</option>
-                    <option value="25px">25</option>
-                    <option value="26px">26</option>
-                    <option value="27px">27</option>
-                    <option value="28px">28</option>
-                    <option value="29px">29</option>
-                    <option value="30px">30</option>
-                </select>
-            </div>
-
-            <div class="slider-container">
-                <label>Matn qalinligi</label>
-                <input type="range" id="slider-weight" min="100" max="900" step="100" value="400" class="slider-input">
-            </div>
-
-            <div class="control-group">
-                <label>Harflar yaqinligi</label>
-                <select id="select-letter-spacing">
-                    <option value="0px" selected>1</option>
-                    <option value="1px">1.2</option>
-                    <option value="2px">1.5</option>
-                    <option value="3px">2</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label>So'zlar yaqinligi</label>
-                <select id="select-word-spacing">
-                    <option value="0px" selected>0</option>
-                    <option value="2px">0.5</option>
-                    <option value="4px">1</option>
-                    <option value="6px">1.5</option>
-                    <option value="8px">2</option>
-                    <option value="10px">2.5</option>
-                    <option value="12px">3</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label>Varoq chiziqlari turi</label>
-                <select id="select-chiziq-turi">
-                    <option value="oq" selected>Oddiy oq varoq</option>
-                    <option value="ona-tili">Ona tili (Chiziqli)</option>
-                    <option value="matematika">Matematika (Katakli)</option>
-                </select>
-            </div>
-
-            <div class="slider-container" id="ona-tili-size-container" style="display: none;">
-                <label>Ona tili chiziqlari masofasi</label>
-                <input type="range" id="slider-ona-tili-size" min="20" max="60" step="1" value="32" class="slider-input">
-            </div>
-
-            <div class="slider-container" id="katak-size-container" style="display: none;">
-                <label>Kataklar kattaligi</label>
-                <input type="range" id="slider-katak-size" min="15" max="40" step="1" value="24" class="slider-input">
-            </div>
-
-            <div class="slider-container">
-                <label>Tekst kursori (Tepadan joy)</label>
-                <input type="range" id="slider-text-top" min="40" max="250" step="2" value="40" class="slider-input">
-            </div>
-
-            <button type="button" class="btn btn-yopish">YOPISH</button>
-
-            <div class="color-section">
-                <label class="color-label">Matn Rangi</label>
-                <div class="color-picker-wrapper">
-                    <input type="color" id="picker-matn-rangi" class="color-picker-input" value="#0000ff">
-                    <span style="font-size: 12px; color: #555;">Palitradan tanlash</span>
-                </div>
-                <div class="color-circles" id="circles-matn-rangi">
-                    <div class="color-circle" style="background-color: #0000ff;"></div>
-                    <div class="color-circle" style="background-color: #000000;"></div>
-                    <div class="color-circle" style="background-color: #8B0000;"></div>
-                    <div class="color-circle" style="background-color: #228B22;"></div>
-                    <div class="color-circle" style="background-color: #4B0082;"></div>
-                </div>
-            </div>
-
-            <div class="color-section">
-                <label class="color-label">Varoq Rangi</label>
-                <div class="color-picker-wrapper">
-                    <input type="color" id="picker-varoq-rangi" class="color-picker-input" value="#ffffff">
-                    <span style="font-size: 12px; color: #555;">Palitradan tanlash</span>
-                </div>
-                <div class="color-circles" id="circles-varoq-rangi">
-                    <div class="color-circle" style="background-color: #ffffff;"></div>
-                    <div class="color-circle" style="background-color: #fff9e6;"></div>
-                    <div class="color-circle" style="background-color: #f0f5ff;"></div>
-                    <div class="color-circle" style="background-color: #eafaf1;"></div>
-                    <div class="color-circle" style="background-color: #fcf8f2;"></div>
-                </div>
-            </div>
-
-            <div class="slider-container">
-                <label>Qator uzunligi (balandligi)</label>
-                <input type="range" id="slider-line-height" min="1.5" max="3.5" step="0.1" value="2" class="slider-input">
-            </div>
-
-            <div class="switch-container">
-                <label class="switch">
-                    <input type="checkbox" id="toggle-soya" checked>
-                    <span class="slider-toggle"></span>
-                </label>
-                <span class="switch-label">Soya</span>
-            </div>
-
-            <div class="switch-container">
-                <label class="switch">
-                    <input type="checkbox" id="toggle-chegara" checked>
-                    <span class="slider-toggle"></span>
-                </label>
-                <span class="switch-label">Varoq chegaralari</span>
-            </div>
-        </div>
-
-        <div class="right-panel-wrapper">
-            <div id="oq-varoq" class="right-panel">
-                <div id="hoshiya" class="hoshiya-chiziq"></div>
-                <div id="output-matn" class="natija-matn">Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing</div>
-            </div>
-            <button id="btn-yuklab" class="btn btn-yuklab">YUKLAB OLISH</button>
-        </div>
-
+    <div id="left-col">
+        <div id="col-title">✏️ Matn kiriting</div>
+        <textarea id="input-matn" placeholder="Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing..."></textarea>
     </div>
 
-    <script>
-        const inputMatn = document.getElementById('input-matn');
-        const outputMatn = document.getElementById('output-matn');
-        const oqVaroq = document.getElementById('oq-varoq');
-        const hoshiya = document.getElementById('hoshiya');
+    <div id="settings-col">
+        <div id="settings-header">⚙️ Sozlamalar</div>
+        <div id="settings-scroll">
 
-        const onaTiliSizeContainer = document.getElementById('ona-tili-size-container');
-        const sliderOnaTiliSize = document.getElementById('slider-ona-tili-size');
-        const katakSizeContainer = document.getElementById('katak-size-container');
-        const sliderKatakSize = document.getElementById('slider-katak-size');
-        const sliderLineHeight = document.getElementById('slider-line-height');
-        const sliderTextTop = document.getElementById('slider-text-top');
+            <div class="sg">
+                <label>Shrift</label>
+                <select id="select-shrift">
+                    <optgroup label="Chiroyli qo'lyozmalar">
+                        <option value="'Charmonman', cursive" selected>Charmonman</option>
+                        <option value="'Marck Script', cursive">Marck Script</option>
+                        <option value="'Bad Script', cursive">Bad Script</option>
+                        <option value="'Caveat', cursive">Caveat</option>
+                        <option value="'Kalam', handwriting">Kalam</option>
+                    </optgroup>
+                    <optgroup label="Shoshilinch / Boshqa">
+                        <option value="'Reenie Beanie', cursive">Reenie Beanie</option>
+                        <option value="'Nothing You Could Do', cursive">Nothing You Could Do</option>
+                        <option value="'Rock Salt', cursive">Rock Salt</option>
+                        <option value="'Permanent Marker', sans-serif">Permanent Marker</option>
+                        <option value="'Montserrat Subrayada', sans-serif">Subrayada</option>
+                    </optgroup>
+                </select>
+            </div>
 
-        // Boshlang'ich yuklanish sozlamasi
-        oqVaroq.style.paddingTop = sliderTextTop.value + 'px';
+            <div class="sg">
+                <label>Matn kattaligi</label>
+                <select id="select-size">
+                    <option value="13px">13</option><option value="14px">14</option>
+                    <option value="15px">15</option><option value="16px">16</option>
+                    <option value="17px" selected>17</option><option value="18px">18</option>
+                    <option value="20px">20</option><option value="22px">22</option>
+                    <option value="24px">24</option><option value="26px">26</option>
+                    <option value="28px">28</option><option value="30px">30</option>
+                </select>
+            </div>
 
-        // Real vaqtda matnni o'ng tomonga o'tkazish
-        inputMatn.addEventListener('input', function() {
-            outputMatn.textContent = this.value;
-        });
+            <div class="sg">
+                <label>Matn qalinligi</label>
+                <div class="range-row">
+                    <input type="range" id="slider-weight" min="100" max="900" step="100" value="400">
+                    <span class="range-val" id="val-weight">400</span>
+                </div>
+            </div>
 
-        // Shrift turini o'zgartirish
-        document.getElementById('select-shrift').addEventListener('change', function() {
-            outputMatn.style.fontFamily = this.value;
-        });
+            <div class="sg">
+                <label>Harflar yaqinligi</label>
+                <div class="range-row">
+                    <input type="range" id="slider-letter" min="0" max="6" step="0.5" value="0">
+                    <span class="range-val" id="val-letter">0</span>
+                </div>
+            </div>
 
-        // Matn o'lchami
-        document.getElementById('select-size').addEventListener('change', function() {
-            outputMatn.style.fontSize = this.value;
-        });
+            <div class="sg">
+                <label>So'zlar yaqinligi</label>
+                <div class="range-row">
+                    <input type="range" id="slider-word" min="0" max="12" step="1" value="0">
+                    <span class="range-val" id="val-word">0</span>
+                </div>
+            </div>
 
-        // Qalinlik
-        document.getElementById('slider-weight').addEventListener('input', function() {
-            outputMatn.style.fontWeight = this.value;
-        });
+            <div class="sg">
+                <label>Qator balandligi</label>
+                <div class="range-row">
+                    <input type="range" id="slider-lh" min="1.5" max="3.5" step="0.1" value="2">
+                    <span class="range-val" id="val-lh">2</span>
+                </div>
+            </div>
 
-        // Harflar orasidagi masofa
-        document.getElementById('select-letter-spacing').addEventListener('change', function() {
-            outputMatn.style.letterSpacing = this.value;
-        });
+            <div class="sg">
+                <label>Matn pozitsiyasi (tepadan)</label>
+                <div class="range-row">
+                    <input type="range" id="slider-top" min="16" max="200" step="2" value="40">
+                    <span class="range-val" id="val-top">40</span>
+                </div>
+            </div>
 
-        // So'zlar orasidagi masofa
-        document.getElementById('select-word-spacing').addEventListener('change', function() {
-            outputMatn.style.wordSpacing = this.value;
-        });
+            <div class="sg">
+                <label>Chiziq turi</label>
+                <select id="select-chiziq">
+                    <option value="oq" selected>Bo'sh oq</option>
+                    <option value="ona-tili">Chiziqli (Ona tili)</option>
+                    <option value="matematika">Katakli (Matematika)</option>
+                    <option value="doira">Nuqtali</option>
+                </select>
+            </div>
 
-        // Qator balandligi
-        sliderLineHeight.addEventListener('input', function() {
-            outputMatn.style.lineHeight = this.value + 'em';
-            if (document.getElementById('select-chiziq-turi').value === 'ona-tili' && !onaTiliKursorIshlatildi) {
-                oqVaroq.style.backgroundSize = '100% ' + this.value + 'em';
-            }
-        });
+            <div class="sg" id="wrap-chiziq-size" style="display:none">
+                <label>Chiziq masofasi</label>
+                <div class="range-row">
+                    <input type="range" id="slider-chiziq-size" min="15" max="60" step="1" value="32">
+                    <span class="range-val" id="val-chiziq">32</span>
+                </div>
+            </div>
 
-        // --- TEKST KURSORI (TEPADAN PASTGA SILJITISH MANTIQLARI) ---
-        sliderTextTop.addEventListener('input', function() {
-            oqVaroq.style.paddingTop = this.value + 'px';
-        });
+            <div class="sg">
+                <label>Matn rangi</label>
+                <input type="color" id="picker-matn" value="#0000ff">
+                <div class="color-circles" id="cc-matn">
+                    <div class="cc" style="background:#0000ff" data-color="#0000ff"></div>
+                    <div class="cc" style="background:#000000" data-color="#000000"></div>
+                    <div class="cc" style="background:#8B0000" data-color="#8B0000"></div>
+                    <div class="cc" style="background:#228B22" data-color="#228B22"></div>
+                    <div class="cc" style="background:#4B0082" data-color="#4B0082"></div>
+                    <div class="cc" style="background:#b45309" data-color="#b45309"></div>
+                </div>
+            </div>
 
-        // --- DAFTAR CHIZIQLARI VA DINAMIK KURSORLAR LOGIKASI ---
-        let onaTiliKursorIshlatildi = false;
+            <div class="sg">
+                <label>Varoq rangi</label>
+                <input type="color" id="picker-varoq" value="#ffffff">
+                <div class="color-circles" id="cc-varoq">
+                    <div class="cc" style="background:#ffffff" data-color="#ffffff"></div>
+                    <div class="cc" style="background:#fff9e6" data-color="#fff9e6"></div>
+                    <div class="cc" style="background:#f0f5ff" data-color="#f0f5ff"></div>
+                    <div class="cc" style="background:#eafaf1" data-color="#eafaf1"></div>
+                    <div class="cc" style="background:#fdf8f0" data-color="#fdf8f0"></div>
+                    <div class="cc" style="background:#fef3f2" data-color="#fef3f2"></div>
+                </div>
+            </div>
 
-        document.getElementById('select-chiziq-turi').addEventListener('change', function() {
-            const tur = this.value;
+            <div class="toggle-row">
+                <span>Qog'oz soyasi</span>
+                <label class="sw">
+                    <input type="checkbox" id="tog-soya" checked>
+                    <span class="sw-track"></span>
+                </label>
+            </div>
 
-            oqVaroq.classList.remove('ona-tili-fon', 'matematika-fon');
-            oqVaroq.style.backgroundSize = '';
+            <div class="toggle-row">
+                <span>Chegara chizig'i</span>
+                <label class="sw">
+                    <input type="checkbox" id="tog-chegara">
+                    <span class="sw-track"></span>
+                </label>
+            </div>
 
-            if (tur === 'ona-tili') {
-                oqVaroq.classList.add('ona-tili-fon');
-                oqVaroq.style.backgroundSize = '100% ' + sliderOnaTiliSize.value + 'px';
-                hoshiya.style.display = 'block';
-                onaTiliSizeContainer.style.display = 'block';
-                katakSizeContainer.style.display = 'none';
-            } else if (tur === 'matematika') {
-                oqVaroq.classList.add('matematika-fon');
-                const pz = sliderKatakSize.value + 'px ';
-                oqVaroq.style.backgroundSize = pz + pz;
-                hoshiya.style.display = 'block';
-                katakSizeContainer.style.display = 'block';
-                onaTiliSizeContainer.style.display = 'none';
-            } else {
-                hoshiya.style.display = 'none';
-                katakSizeContainer.style.display = 'none';
-                onaTiliSizeContainer.style.display = 'none';
-            }
-        });
+            <div class="toggle-row">
+                <span>Hoshiya chizig'i</span>
+                <label class="sw">
+                    <input type="checkbox" id="tog-hoshiya">
+                    <span class="sw-track"></span>
+                </label>
+            </div>
 
-        // Ona tili chiziqlari kursori surilganda
-        sliderOnaTiliSize.addEventListener('input', function() {
-            if (document.getElementById('select-chiziq-turi').value === 'ona-tili') {
-                onaTiliKursorIshlatildi = true;
-                oqVaroq.style.backgroundSize = '100% ' + this.value + 'px';
-            }
-        });
+            <button id="btn-yopish">✔ YOPISH</button>
 
-        // Kataklar o'lchami kursor surilganda
-        sliderKatakSize.addEventListener('input', function() {
-            if (document.getElementById('select-chiziq-turi').value === 'matematika') {
-                const pz = this.value + 'px ';
-                oqVaroq.style.backgroundSize = pz + pz;
-            }
-        });
+        </div>
+    </div>
 
-        // --- MATN RANGI LOGIKASI ---
-        const pickerMatnRangi = document.getElementById('picker-matn-rangi');
-        pickerMatnRangi.addEventListener('input', function() {
-            outputMatn.style.color = this.value;
-        });
+    <div id="right-col">
+        <div id="varoq-wrap">
+            <div id="a4-sizer">
+                <div id="oq-varoq">
+                    <div id="hoshiya"></div>
+                    <div id="output-matn">Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...</div>
+                </div>
+            </div>
+        </div>
+        <button id="btn-yuklab">⬇ YUKLAB OLISH</button>
+    </div>
 
-        const matnDoirachalari = document.querySelectorAll('#circles-matn-rangi .color-circle');
-        matnDoirachalari.forEach(circle => {
-            circle.addEventListener('click', function() {
-                const rang = this.style.backgroundColor;
-                outputMatn.style.color = rang;
-                pickerMatnRangi.value = rgbToHex(rang);
-            });
-        });
+    <div id="status-bar">
+        <span id="st-chars">Belgilar: 0</span>
+        <span>A4 format • 210 × 297 mm</span>
+        <span id="st-words">So'zlar: 0</span>
+    </div>
 
-        // --- VAROQ RANGI LOGIKASI ---
-        const pickerVaroqRangi = document.getElementById('picker-varoq-rangi');
-        pickerVaroqRangi.addEventListener('input', function() {
-            oqVaroq.style.backgroundColor = this.value;
-        });
+</div>
 
-        const varoqDoirachalari = document.querySelectorAll('#circles-varoq-rangi .color-circle');
-        varoqDoirachalari.forEach(circle => {
-            circle.addEventListener('click', function() {
-                const rang = this.style.backgroundColor;
-                oqVaroq.style.backgroundColor = rang;
-                pickerVaroqRangi.value = rgbToHex(rang);
-            });
-        });
+<button id="mob-fab" onclick="openDrawer()">⚙</button>
+<div id="mob-overlay" onclick="closeDrawer()"></div>
 
-        // RGB formatni HEX formatga o'tkazish
-        function rgbToHex(rgb) {
-            if (rgb.startsWith('#')) return rgb;
-            const rgbValues = rgb.match(/\d+/g);
-            if (!rgbValues) return '#ffffff';
-            return "#" + rgbValues.slice(0, 3).map(x => {
-                const hex = parseInt(x).toString(16);
-                return hex.length === 1 ? "0" + hex : hex;
-            }).join("");
-        }
+<div id="mob-drawer">
+    <div class="drawer-handle"></div>
 
-        // --- TOGGLES (SWITCHES) ---
-        document.getElementById('toggle-soya').addEventListener('change', function() {
-            oqVaroq.style.boxShadow = this.checked ? '0px 25px 50px rgba(0, 0, 0, 0.3), inset 0 0 40px rgba(0, 0, 0, 0.1)' : 'none';
-        });
+    <div class="sg">
+        <label>Shrift</label>
+        <select id="m-shrift">
+            <optgroup label="Chiroyli">
+                <option value="'Charmonman', cursive" selected>Charmonman</option>
+                <option value="'Marck Script', cursive">Marck Script</option>
+                <option value="'Bad Script', cursive">Bad Script</option>
+                <option value="'Caveat', cursive">Caveat</option>
+                <option value="'Kalam', handwriting">Kalam</option>
+            </optgroup>
+            <optgroup label="Boshqa">
+                <option value="'Reenie Beanie', cursive">Reenie Beanie</option>
+                <option value="'Nothing You Could Do', cursive">Nothing You Could Do</option>
+                <option value="'Rock Salt', cursive">Rock Salt</option>
+                <option value="'Permanent Marker', sans-serif">Permanent Marker</option>
+            </optgroup>
+        </select>
+    </div>
 
-        document.getElementById('toggle-chegara').addEventListener('change', function() {
-            oqVaroq.style.border = this.checked ? 'none' : '1px dashed rgba(0,0,0,0.2)';
-        });
+    <div class="sg">
+        <label>Matn kattaligi</label>
+        <select id="m-size">
+            <option value="12px">12</option><option value="13px">13</option>
+            <option value="14px">14</option><option value="15px" selected>15</option>
+            <option value="16px">16</option><option value="18px">18</option>
+            <option value="20px">20</option><option value="22px">22</option>
+            <option value="24px">24</option>
+        </select>
+    </div>
 
-        // --- MULTIPLATFORMALIK YUKLAB OLISH (JPEG LOGIKASI - PC VA ANDROID) ---
-        document.getElementById('btn-yuklab').addEventListener('click', function() {
-            const v_element = document.getElementById('oq-varoq');
+    <div class="sg">
+        <label>Chiziq turi</label>
+        <select id="m-chiziq">
+            <option value="oq" selected>Bo'sh oq</option>
+            <option value="ona-tili">Chiziqli</option>
+            <option value="matematika">Katakli</option>
+            <option value="doira">Nuqtali</option>
+        </select>
+    </div>
 
-            // Yuqori sifatli va barcha qurilmalarda bir xil chiqishi uchun render opsiyalari
-            const opsiyalar = {
-                scale: 2, // Rasm xira bo'lmasligi uchun tiniqlik ko'rsatkichi
-                useCORS: true, // Google shriflarini to'g'ri o'qib olish kafolati
-                backgroundColor: null,
-                logging: false
-            };
+    <div class="sg">
+        <label>Matn rangi</label>
+        <input type="color" id="m-matn-rang" value="#0000ff">
+    </div>
 
-            html2canvas(v_element, opsiyalar).then(canvas => {
-                // Sifatli JPEG formatiga o'tkazish
-                const rasmUrl = canvas.toDataURL('image/jpeg', 0.95);
+    <div class="sg">
+        <label>Varoq rangi</label>
+        <input type="color" id="m-varoq-rang" value="#ffffff">
+    </div>
 
-                // Yuklab olish uchun vaqtinchalik havola yaratish (Kompyuter va Android brauzerlar uchun universal)
-                const havola = document.createElement('a');
-                havola.href = rasmUrl;
-                havola.download = 'husnihat_daftar_' + Date.now() + '.jpg';
+    <div class="sg">
+        <label>Qator balandligi</label>
+        <div class="range-row">
+            <input type="range" id="m-lh" min="1.5" max="3.5" step="0.1" value="1.8">
+            <span class="range-val" id="m-lh-val">1.8</span>
+        </div>
+    </div>
 
-                document.body.appendChild(havola);
-                havola.click();
-                document.body.removeChild(havola);
-            }).catch(error => {
-                console.error("Yuklab olishda xatolik yuz berdi:", error);
-                alert("Rasmni yaratishda muammo bo'ldi. Brauzeringizni tekshiring.");
-            });
-        });
-    </script>
+    <div class="sg">
+        <label>Matn pozitsiyasi</label>
+        <div class="range-row">
+            <input type="range" id="m-top" min="10" max="120" step="2" value="24">
+            <span class="range-val" id="m-top-val">24</span>
+        </div>
+    </div>
+
+    <button id="btn-yopish-mob" onclick="closeDrawer()" style="width:100%;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">✔ YOPISH</button>
+</div>
+
+<script>
+const inputMatn  = document.getElementById('input-matn');
+const outputMatn = document.getElementById('output-matn');
+const oqVaroq    = document.getElementById('oq-varoq');
+const hoshiya    = document.getElementById('hoshiya');
+
+function $(id) { return document.getElementById(id); }
+
+function setRange(id, valId, unit, fn) {
+    const el = $(id), vEl = $(valId);
+    el.addEventListener('input', () => {
+        const v = el.value;
+        if (vEl) vEl.textContent = parseFloat(v).toFixed(unit === 'float' ? 1 : 0);
+        fn(v);
+    });
+}
+
+inputMatn.addEventListener('input', function() {
+    const val = this.value || '';
+    outputMatn.textContent = val || "Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...";
+    updateStatus(val);
+});
+
+function updateStatus(val) {
+    $('st-chars').textContent = 'Belgilar: ' + val.length;
+    $('st-words').textContent = "So'zlar: " + (val.trim() ? val.trim().split(/\s+/).length : 0);
+}
+
+$('select-shrift').addEventListener('change', e => outputMatn.style.fontFamily = e.target.value);
+$('select-size').addEventListener('change', e => outputMatn.style.fontSize = e.target.value);
+
+setRange('slider-weight', 'val-weight', 'int',   v => outputMatn.style.fontWeight    = v);
+setRange('slider-letter', 'val-letter', 'float', v => outputMatn.style.letterSpacing = v + 'px');
+setRange('slider-word',   'val-word',   'int',   v => outputMatn.style.wordSpacing   = v + 'px');
+setRange('slider-lh',     'val-lh',     'float', v => { outputMatn.style.lineHeight  = v + 'em'; updateChiziqBg(); });
+setRange('slider-top',    'val-top',    'int',   v => outputMatn.style.paddingTop    = v + 'px');
+
+function applyChiziq(tur) {
+    oqVaroq.classList.remove('ona-tili-fon', 'matematika-fon', 'doira-fon');
+    oqVaroq.style.backgroundSize = '';
+    $('wrap-chiziq-size').style.display = 'none';
+    if (tur === 'ona-tili')    { oqVaroq.classList.add('ona-tili-fon');  $('wrap-chiziq-size').style.display = 'flex'; }
+    else if (tur === 'matematika') { oqVaroq.classList.add('matematika-fon'); $('wrap-chiziq-size').style.display = 'flex'; }
+    else if (tur === 'doira')  { oqVaroq.classList.add('doira-fon');     $('wrap-chiziq-size').style.display = 'flex'; }
+    updateChiziqBg();
+}
+
+function updateChiziqBg() {
+    const tur = $('select-chiziq').value;
+    const sz  = $('slider-chiziq-size').value;
+    if (tur === 'ona-tili')    oqVaroq.style.backgroundSize = '100% ' + sz + 'px';
+    else if (tur === 'matematika') oqVaroq.style.backgroundSize = sz + 'px ' + sz + 'px';
+    else if (tur === 'doira')  oqVaroq.style.backgroundSize = sz + 'px ' + sz + 'px';
+}
+
+$('select-chiziq').addEventListener('change', e => applyChiziq(e.target.value));
+setRange('slider-chiziq-size', 'val-chiziq', 'int', () => updateChiziqBg());
+
+function applyMatnRangi(c) { outputMatn.style.color = c; }
+function applyVaroqRangi(c) { oqVaroq.style.backgroundColor = c; }
+
+$('picker-matn').addEventListener('input', e => applyMatnRangi(e.target.value));
+$('picker-varoq').addEventListener('input', e => applyVaroqRangi(e.target.value));
+
+document.querySelectorAll('#cc-matn .cc').forEach(cc => {
+    cc.addEventListener('click', function() {
+        document.querySelectorAll('#cc-matn .cc').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        applyMatnRangi(this.dataset.color);
+        $('picker-matn').value = this.dataset.color;
+    });
+});
+
+document.querySelectorAll('#cc-varoq .cc').forEach(cc => {
+    cc.addEventListener('click', function() {
+        document.querySelectorAll('#cc-varoq .cc').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        applyVaroqRangi(this.dataset.color);
+        $('picker-varoq').value = this.dataset.color;
+    });
+});
+
+$('tog-soya').addEventListener('change', function() {
+    oqVaroq.style.boxShadow = this.checked
+        ? '0 20px 60px rgba(0,0,0,0.22), inset 0 0 30px rgba(0,0,0,0.06)'
+        : 'none';
+});
+
+$('tog-chegara').addEventListener('change', function() {
+    oqVaroq.style.border = this.checked ? '1.5px dashed rgba(0,0,0,0.2)' : 'none';
+});
+
+$('tog-hoshiya').addEventListener('change', function() {
+    hoshiya.style.display = this.checked ? 'block' : 'none';
+});
+
+function openDrawer() {
+    $('mob-drawer').classList.add('open');
+    $('mob-overlay').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+    $('mob-drawer').classList.remove('open');
+    $('mob-overlay').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+$('m-shrift').addEventListener('change', e => outputMatn.style.fontFamily = e.target.value);
+$('m-size').addEventListener('change', e => outputMatn.style.fontSize = e.target.value);
+$('m-chiziq').addEventListener('change', e => applyChiziq(e.target.value));
+$('m-matn-rang').addEventListener('input', e => applyMatnRangi(e.target.value));
+$('m-varoq-rang').addEventListener('input', e => applyVaroqRangi(e.target.value));
+setRange('m-lh',  'm-lh-val',  'float', v => outputMatn.style.lineHeight = v + 'em');
+setRange('m-top', 'm-top-val', 'int',   v => outputMatn.style.paddingTop = v + 'px');
+
+$('btn-yuklab').addEventListener('click', function() {
+    const btn = this;
+    btn.textContent = '⏳ Tayyorlanmoqda...';
+    btn.disabled = true;
+
+    html2canvas(oqVaroq, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: oqVaroq.style.backgroundColor || '#ffffff',
+        logging: false
+    }).then(canvas => {
+        const url = canvas.toDataURL('image/jpeg', 0.96);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'husnihat_' + Date.now() + '.jpg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }).catch(err => {
+        alert("Xatolik yuz berdi. Qayta urinib ko'ring.");
+    }).finally(() => {
+        btn.textContent = '⬇ YUKLAB OLISH';
+        btn.disabled = false;
+    });
+});
+
+document.querySelector('#cc-matn .cc').classList.add('active');
+document.querySelector('#cc-varoq .cc').classList.add('active');
+outputMatn.style.paddingTop = '40px';
+</script>
 </body>
 </html>
