@@ -28,7 +28,6 @@ box-sizing:border-box;
 --accent2:#e2574c;
 --text:#1e293b;
 --muted:#64748b;
---radius:18px;
 }
 
 html,body{
@@ -85,6 +84,9 @@ resize:none;
 outline:none;
 
 color:#111;
+
+/* KURSOR */
+caret-color:#2563eb;
 }
 
 /* SETTINGS */
@@ -161,6 +163,12 @@ flex:1;
 font-size:12px;
 font-weight:700;
 color:#2563eb;
+}
+
+.toggle-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
 .color-circles{
@@ -481,8 +489,6 @@ z-index:300;
 
 <div id="app">
 
-<!-- LEFT -->
-
 <div id="left-col">
 
 <div id="col-title">
@@ -493,86 +499,13 @@ z-index:300;
 
 </div>
 
-<!-- SETTINGS PC -->
-
 <div id="settings-col">
 
 <div id="settings-header">
 ⚙️ SOZLAMALAR
 </div>
 
-<div id="settings-scroll"></div>
-
-</div>
-
-<!-- RIGHT -->
-
-<div id="right-col">
-
-<div id="varoq-wrap">
-
-<div id="a4-sizer">
-
-<div id="oq-varoq">
-
-<div id="hoshiya"></div>
-
-<div id="output-matn">
-Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<button id="btn-yuklab">
-⬇ YUKLAB OLISH
-</button>
-
-</div>
-
-</div>
-
-<!-- MOBILE -->
-
-<button id="mob-fab" onclick="openDrawer()">
-⚙
-</button>
-
-<div id="mob-drawer">
-
-<div class="mob-top">
-
-<div class="mob-title">
-⚙ SOZLAMALAR
-</div>
-
-<button class="mob-close" onclick="closeDrawer()">
-✕
-</button>
-
-</div>
-
-<div id="mob-settings"></div>
-
-</div>
-
-<script>
-
-const inputMatn=document.getElementById('input-matn');
-const outputMatn=document.getElementById('output-matn');
-const oqVaroq=document.getElementById('oq-varoq');
-const hoshiya=document.getElementById('hoshiya');
-
-function $(id){
-return document.getElementById(id);
-}
-
-/* SETTINGS HTML */
-
-const settingsHTML = `
+<div id="settings-scroll">
 
 <div class="sg">
 <label>Shrift</label>
@@ -584,24 +517,10 @@ const settingsHTML = `
 <option value="'Bad Script', cursive">Bad Script</option>
 <option value="'Caveat', cursive">Caveat</option>
 <option value="'Kalam', cursive">Kalam</option>
-
 <option value="'Reenie Beanie', cursive">Reenie Beanie</option>
-
-<option value="'Nothing You Could Do', cursive">
-Nothing You Could Do
-</option>
-
-<option value="'Rock Salt', cursive">
-Rock Salt
-</option>
-
-<option value="'Permanent Marker', sans-serif">
-Permanent Marker
-</option>
-
-<option value="'Montserrat Subrayada', sans-serif">
-Subrayada
-</option>
+<option value="'Nothing You Could Do', cursive">Nothing You Could Do</option>
+<option value="'Rock Salt', cursive">Rock Salt</option>
+<option value="'Permanent Marker', sans-serif">Permanent Marker</option>
 
 </select>
 </div>
@@ -610,7 +529,6 @@ Subrayada
 <label>Matn kattaligi</label>
 
 <select id="select-size">
-
 <option value="13px">13</option>
 <option value="14px">14</option>
 <option value="15px">15</option>
@@ -619,8 +537,6 @@ Subrayada
 <option value="18px">18</option>
 <option value="20px">20</option>
 <option value="22px">22</option>
-<option value="24px">24</option>
-
 </select>
 </div>
 
@@ -751,29 +667,58 @@ value="#ffffff">
 
 </div>
 
-<div class="sg">
+<div class="toggle-row">
 <label>Qog'oz soyasi</label>
-
-<input type="checkbox"
-id="tog-soya"
-checked>
-
+<input type="checkbox" id="tog-soya" checked>
 </div>
 
-<div class="sg">
+<div class="toggle-row">
 <label>Hoshiya</label>
-
-<input type="checkbox"
-id="tog-hoshiya">
+<input type="checkbox" id="tog-hoshiya">
+</div>
 
 </div>
 
-`;
+</div>
 
-document.getElementById('settings-scroll').innerHTML=settingsHTML;
-document.getElementById('mob-settings').innerHTML=settingsHTML;
+<div id="right-col">
 
-/* TEXT */
+<div id="varoq-wrap">
+
+<div id="a4-sizer">
+
+<div id="oq-varoq">
+
+<div id="hoshiya"></div>
+
+<div id="output-matn">
+Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<button id="btn-yuklab">
+⬇ YUKLAB OLISH
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const inputMatn=document.getElementById('input-matn');
+const outputMatn=document.getElementById('output-matn');
+const oqVaroq=document.getElementById('oq-varoq');
+const hoshiya=document.getElementById('hoshiya');
+
+function $(id){
+return document.getElementById(id);
+}
 
 inputMatn.addEventListener('input',()=>{
 
@@ -783,19 +728,17 @@ inputMatn.value ||
 
 });
 
-/* FUNCTIONS */
+/* SELECT */
 
-document.addEventListener('change',e=>{
-
-if(e.target.id==="select-shrift"){
+$('select-shrift').addEventListener('change',e=>{
 outputMatn.style.fontFamily=e.target.value;
-}
+});
 
-if(e.target.id==="select-size"){
+$('select-size').addEventListener('change',e=>{
 outputMatn.style.fontSize=e.target.value;
-}
+});
 
-if(e.target.id==="select-chiziq"){
+$('select-chiziq').addEventListener('change',e=>{
 
 oqVaroq.classList.remove(
 'ona-tili-fon',
@@ -817,17 +760,68 @@ if(e.target.value==="doira"){
 oqVaroq.classList.add('doira-fon');
 oqVaroq.style.backgroundSize='26px 26px';
 }
-}
 
-if(e.target.id==="picker-matn"){
+});
+
+/* RANGE */
+
+$('slider-weight').addEventListener('input',e=>{
+
+outputMatn.style.fontWeight=e.target.value;
+
+$('val-weight').textContent=e.target.value;
+
+});
+
+$('slider-letter').addEventListener('input',e=>{
+
+outputMatn.style.letterSpacing=
+e.target.value+'px';
+
+$('val-letter').textContent=e.target.value;
+
+});
+
+$('slider-word').addEventListener('input',e=>{
+
+outputMatn.style.wordSpacing=
+e.target.value+'px';
+
+$('val-word').textContent=e.target.value;
+
+});
+
+$('slider-lh').addEventListener('input',e=>{
+
+outputMatn.style.lineHeight=
+e.target.value+'em';
+
+$('val-lh').textContent=e.target.value;
+
+});
+
+$('slider-top').addEventListener('input',e=>{
+
+outputMatn.style.paddingTop=
+e.target.value+'px';
+
+$('val-top').textContent=e.target.value;
+
+});
+
+/* COLOR */
+
+$('picker-matn').addEventListener('input',e=>{
 outputMatn.style.color=e.target.value;
-}
+});
 
-if(e.target.id==="picker-varoq"){
+$('picker-varoq').addEventListener('input',e=>{
 oqVaroq.style.backgroundColor=e.target.value;
-}
+});
 
-if(e.target.id==="tog-soya"){
+/* TOGGLE */
+
+$('tog-soya').addEventListener('change',e=>{
 
 oqVaroq.style.boxShadow=
 e.target.checked
@@ -835,9 +829,10 @@ e.target.checked
 '0 20px 60px rgba(0,0,0,.18), inset 0 0 30px rgba(0,0,0,.04)'
 :
 'none';
-}
 
-if(e.target.id==="tog-hoshiya"){
+});
+
+$('tog-hoshiya').addEventListener('change',e=>{
 
 hoshiya.style.display=
 e.target.checked
@@ -845,64 +840,8 @@ e.target.checked
 'block'
 :
 'none';
-}
 
 });
-
-/* RANGE */
-
-document.addEventListener('input',e=>{
-
-if(e.target.id==="slider-weight"){
-
-outputMatn.style.fontWeight=e.target.value;
-
-$('val-weight').textContent=e.target.value;
-}
-
-if(e.target.id==="slider-letter"){
-
-outputMatn.style.letterSpacing=
-e.target.value+'px';
-
-$('val-letter').textContent=e.target.value;
-}
-
-if(e.target.id==="slider-word"){
-
-outputMatn.style.wordSpacing=
-e.target.value+'px';
-
-$('val-word').textContent=e.target.value;
-}
-
-if(e.target.id==="slider-lh"){
-
-outputMatn.style.lineHeight=
-e.target.value+'em';
-
-$('val-lh').textContent=e.target.value;
-}
-
-if(e.target.id==="slider-top"){
-
-outputMatn.style.paddingTop=
-e.target.value+'px';
-
-$('val-top').textContent=e.target.value;
-}
-
-});
-
-/* DRAWER */
-
-function openDrawer(){
-$('mob-drawer').classList.add('open');
-}
-
-function closeDrawer(){
-$('mob-drawer').classList.remove('open');
-}
 
 /* DOWNLOAD */
 
