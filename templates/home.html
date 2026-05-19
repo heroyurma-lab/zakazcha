@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Husnihat — Shaxsiy Veb-sayt</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;700&family=Charmonman:wght@400;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Montserrat+Subrayada&family=Reenie+Beanie&family=Nothing+You+Could+Do&family=Permanent+Marker&family=Rock+Salt&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        body {
+            /* Sayt orqa foni: 70% oq va 30% ko'k aralashmasidan iborat och mayin ko'k rang */
+            background-color: #e6ecf5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 95%;
+            max-width: 1400px;
+            height: 90vh;
+            position: relative;
+        }
+
+        /* Chap panel - Sariq varoq */
+        .left-panel {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 100%;
+            padding-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .varoq-sariq {
+            background: linear-gradient(135deg, #f5f593 0%, #e1e16b 100%);
+            padding: 30px;
+            box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+            min-height: 450px;
+            color: #000000;
+            font-size: 16px;
+            line-height: 1.8;
+            word-wrap: break-word;
+            border: none;
+            resize: none;
+            outline: none;
+            font-family: monospace;
+            box-sizing: border-box;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        /* O'rtadagi boshqaruv paneli */
+        .settings-panel {
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .settings-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+        .settings-panel::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+        }
+
+        .control-group {
+            width: 100%;
+            max-width: 220px;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            color: #333333;
+            margin-bottom: 5px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .control-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #ffffff;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Slider stillari */
+        .slider-container {
+            width: 100%;
+            max-width: 220px;
+        }
+
+        .slider-container label {
+            font-size: 12px;
+            color: #333333;
+            margin-bottom: 5px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .slider-input {
+            width: 100%;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        /* Rang tanlash elementlari */
+        .color-section {
+            width: 100%;
+            max-width: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .color-label {
+            font-size: 12px;
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-picker-input {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 0;
+            cursor: pointer;
+            background: none;
+        }
+
+        .color-circles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .color-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.15);
+            transition: transform 0.1s;
+        }
+
+        .color-circle:hover {
+            transform: scale(1.15);
+        }
+
+        /* Switcher (Toggle) o'tkazgichlari */
+        .switch-container {
+            width: 100%;
+            max-width: 220px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-toggle {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #b3b3b3;
+            transition: .3s;
+            border-radius: 20px;
+        }
+
+        .slider-toggle:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider-toggle {
+            background-color: #e2574c;
+        }
+
+        input:checked + .slider-toggle:before {
+            transform: translateX(20px);
+        }
+
+        .switch-label {
+            font-size: 14px;
+            color: #333333;
+        }
+
+        /* O'ng panel - Oq varoq va uning pastidagi tugma majmuasi */
+        .right-panel-wrapper {
+            width: 38%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Realistik qalin soya effekti */
+        .right-panel {
+            width: 100%;
+            background-color: #ffffff;
+            height: 85%;
+            padding: 40px;
+            box-sizing: border-box;
+            position: relative;
+            transition: background 0.3s, box-shadow 0.3s, padding-top 0.1s;
+            overflow: hidden;
+
+            /* Tashqi va to'q ichki realistik qog'oz soyasi */
+            box-shadow:
+                0px 25px 50px rgba(0, 0, 0, 0.3),
+                inset 0 0 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Qizil hoshiya chizig'i (Daftar chetidagi chiziq - Поля) */
+        .hoshiya-chiziq {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 60px; /* O'ng chetdan kesib o'tadi */
+            width: 1.5px;
+            height: 100%;
+            background-color: rgba(255, 99, 71, 0.6); /* Och qizil rang */
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .natija-matn {
+            color: #0000ff;
+            font-size: 17px;
+            line-height: 2em;
+            white-space: pre-line;
+            font-family: 'Charmonman', cursive;
+            word-wrap: break-word;
+            height: 100%;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+            padding-right: 20px;
+            box-sizing: border-box;
+        }
+
+        /* --- DAFTAR CHIZIQLARI ANDOZALARI --- */
+
+        /* 1. Ona tili - Gorizontal och ko'k chiziqlar (Dinamik JS orqali boshqariladi) */
+        .right-panel.ona-tili-fon {
+            background-image: linear-gradient(rgba(173, 216, 230, 0.6) 1.5px, transparent 1.5px);
+        }
+
+        /* 2. Matematika - Katak-katak chiziqlar (Dinamik JS orqali boshqariladi) */
+        .right-panel.matematika-fon {
+            background-image:
+                linear-gradient(rgba(173, 216, 230, 0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(173, 216, 230, 0.5) 1px, transparent 1px);
+        }
+
+        /* Tugmalar */
+        .btn {
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .btn-yopish {
+            background-color: #0000ff;
+            color: white;
+            width: 100%;
+            max-width: 220px;
+            border-radius: 4px;
+        }
+
+        /* Pastga tushirilgan yuklab olish tugmasi */
+        .btn-yuklab {
+            background-color: #e2574c;
+            color: white;
+            padding: 12px 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+
+        .btn-yuklab:active {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="left-panel">
+            <textarea id="input-matn" class="varoq-sariq" placeholder="Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...">Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing</textarea>
+        </div>
+
+        <div class="settings-panel">
+            <div class="control-group">
+                <label>Shrifftlar</label>
+                <select id="select-shrift">
+                    <optgroup label="✨ CHIROYLI QO'LYOZMAlar">
+                        <option value="'Charmonman', cursive" selected>Charmonman (Silliq va chiroyli)</option>
+                        <option value="'Marck Script', cursive">Marck Script (Chiroyli qiyiq yozuv)</option>
+                        <option value="'Bad Script', cursive">Bad Script (Maktab husnihati)</option>
+                        <option value="'Caveat', cursive">Caveat (Tushunarli qo'lyozma)</option>
+                        <option value="'Kalam', handwriting">Kalam (Chiroyli ruchka yozuvi)</option>
+                    </optgroup>
+                    <optgroup label="✍️ XUNUKROQ / SHOSHILINCH QO'LYOZMAlar">
+                        <option value="'Reenie Beanie', cursive">Reenie Beanie (Juda ingichka va xunuk)</option>
+                        <option value="'Nothing You Could Do', cursive">Nothing You Could Do (Tartibsiz xat)</option>
+                        <option value="'Rock Salt', cursive">Rock Salt (Shoshinch shifokor yozuvi)</option>
+                        <option value="'Permanent Marker', sans-serif">Permanent Marker (Qalin va bo'g'iq)</option>
+                        <option value="'Montserrat Subrayada', sans-serif">Subrayada (G'alati va parokanda)</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Matn kattaligi</label>
+                <select id="select-size">
+                    <option value="15px">15</option>
+                    <option value="16px">16</option>
+                    <option value="17px" selected>17</option>
+                    <option value="18px">18</option>
+                    <option value="19px">19</option>
+                    <option value="20px">20</option>
+                    <option value="21px">21</option>
+                    <option value="22px">22</option>
+                    <option value="23px">23</option>
+                    <option value="24px">24</option>
+                    <option value="25px">25</option>
+                    <option value="26px">26</option>
+                    <option value="27px">27</option>
+                    <option value="28px">28</option>
+                    <option value="29px">29</option>
+                    <option value="30px">30</option>
+                </select>
+            </div>
+
+            <div class="slider-container">
+                <label>Matn qalinligi</label>
+                <input type="range" id="slider-weight" min="100" max="900" step="100" value="400" class="slider-input">
+            </div>
+
+            <div class="control-group">
+                <label>Harflar yaqinligi</label>
+                <select id="select-letter-spacing">
+                    <option value="0px" selected>1</option>
+                    <option value="1px">1.2</option>
+                    <option value="2px">1.5</option>
+                    <option value="3px">2</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>So'zlar yaqinligi</label>
+                <select id="select-word-spacing">
+                    <option value="0px" selected>0</option>
+                    <option value="2px">0.5</option>
+                    <option value="4px">1</option>
+                    <option value="6px">1.5</option>
+                    <option value="8px">2</option>
+                    <option value="10px">2.5</option>
+                    <option value="12px">3</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Varoq chiziqlari turi</label>
+                <select id="select-chiziq-turi">
+                    <option value="oq" selected>Oddiy oq varoq</option>
+                    <option value="ona-tili">Ona tili (Chiziqli)</option>
+                    <option value="matematika">Matematika (Katakli)</option>
+                </select>
+            </div>
+
+            <div class="slider-container" id="ona-tili-size-container" style="display: none;">
+                <label>Ona tili chiziqlari masofasi</label>
+                <input type="range" id="slider-ona-tili-size" min="20" max="60" step="1" value="32" class="slider-input">
+            </div>
+
+            <div class="slider-container" id="katak-size-container" style="display: none;">
+                <label>Kataklar kattaligi</label>
+                <input type="range" id="slider-katak-size" min="15" max="40" step="1" value="24" class="slider-input">
+            </div>
+
+            <div class="slider-container">
+                <label>Tekst kursori (Tepadan joy)</label>
+                <input type="range" id="slider-text-top" min="40" max="250" step="2" value="40" class="slider-input">
+            </div>
+
+            <button type="button" class="btn btn-yopish">YOPISH</button>
+
+            <div class="color-section">
+                <label class="color-label">Matn Rangi</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="picker-matn-rangi" class="color-picker-input" value="#0000ff">
+                    <span style="font-size: 12px; color: #555;">Palitradan tanlash</span>
+                </div>
+                <div class="color-circles" id="circles-matn-rangi">
+                    <div class="color-circle" style="background-color: #0000ff;"></div>
+                    <div class="color-circle" style="background-color: #000000;"></div>
+                    <div class="color-circle" style="background-color: #8B0000;"></div>
+                    <div class="color-circle" style="background-color: #228B22;"></div>
+                    <div class="color-circle" style="background-color: #4B0082;"></div>
+                </div>
+            </div>
+
+            <div class="color-section">
+                <label class="color-label">Varoq Rangi</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="picker-varoq-rangi" class="color-picker-input" value="#ffffff">
+                    <span style="font-size: 12px; color: #555;">Palitradan tanlash</span>
+                </div>
+                <div class="color-circles" id="circles-varoq-rangi">
+                    <div class="color-circle" style="background-color: #ffffff;"></div>
+                    <div class="color-circle" style="background-color: #fff9e6;"></div>
+                    <div class="color-circle" style="background-color: #f0f5ff;"></div>
+                    <div class="color-circle" style="background-color: #eafaf1;"></div>
+                    <div class="color-circle" style="background-color: #fcf8f2;"></div>
+                </div>
+            </div>
+
+            <div class="slider-container">
+                <label>Qator uzunligi (balandligi)</label>
+                <input type="range" id="slider-line-height" min="1.5" max="3.5" step="0.1" value="2" class="slider-input">
+            </div>
+
+            <div class="switch-container">
+                <label class="switch">
+                    <input type="checkbox" id="toggle-soya" checked>
+                    <span class="slider-toggle"></span>
+                </label>
+                <span class="switch-label">Soya</span>
+            </div>
+
+            <div class="switch-container">
+                <label class="switch">
+                    <input type="checkbox" id="toggle-chegara" checked>
+                    <span class="slider-toggle"></span>
+                </label>
+                <span class="switch-label">Varoq chegaralari</span>
+            </div>
+        </div>
+
+        <div class="right-panel-wrapper">
+            <div id="oq-varoq" class="right-panel">
+                <div id="hoshiya" class="hoshiya-chiziq"></div>
+                <div id="output-matn" class="natija-matn">Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing</div>
+            </div>
+            <button id="btn-yuklab" class="btn btn-yuklab">YUKLAB OLISH</button>
+        </div>
+
+    </div>
+
+    <script>
+        const inputMatn = document.getElementById('input-matn');
+        const outputMatn = document.getElementById('output-matn');
+        const oqVaroq = document.getElementById('oq-varoq');
+        const hoshiya = document.getElementById('hoshiya');
+
+        const onaTiliSizeContainer = document.getElementById('ona-tili-size-container');
+        const sliderOnaTiliSize = document.getElementById('slider-ona-tili-size');
+        const katakSizeContainer = document.getElementById('katak-size-container');
+        const sliderKatakSize = document.getElementById('slider-katak-size');
+        const sliderLineHeight = document.getElementById('slider-line-height');
+        const sliderTextTop = document.getElementById('slider-text-top');
+
+        // Boshlang'ich yuklanish sozlamasi
+        oqVaroq.style.paddingTop = sliderTextTop.value + 'px';
+
+        // Real vaqtda matnni o'ng tomonga o'tkazish
+        inputMatn.addEventListener('input', function() {
+            outputMatn.textContent = this.value;
+        });
+
+        // Shrift turini o'zgartirish
+        document.getElementById('select-shrift').addEventListener('change', function() {
+            outputMatn.style.fontFamily = this.value;
+        });
+
+        // Matn o'lchami
+        document.getElementById('select-size').addEventListener('change', function() {
+            outputMatn.style.fontSize = this.value;
+        });
+
+        // Qalinlik
+        document.getElementById('slider-weight').addEventListener('input', function() {
+            outputMatn.style.fontWeight = this.value;
+        });
+
+        // Harflar orasidagi masofa
+        document.getElementById('select-letter-spacing').addEventListener('change', function() {
+            outputMatn.style.letterSpacing = this.value;
+        });
+
+        // So'zlar orasidagi masofa
+        document.getElementById('select-word-spacing').addEventListener('change', function() {
+            outputMatn.style.wordSpacing = this.value;
+        });
+
+        // Qator balandligi
+        sliderLineHeight.addEventListener('input', function() {
+            outputMatn.style.lineHeight = this.value + 'em';
+            if (document.getElementById('select-chiziq-turi').value === 'ona-tili' && !onaTiliKursorIshlatildi) {
+                oqVaroq.style.backgroundSize = '100% ' + this.value + 'em';
+            }
+        });
+
+        // --- TEKST KURSORI (TEPADAN PASTGA SILJITISH MANTIQLARI) ---
+        sliderTextTop.addEventListener('input', function() {
+            oqVaroq.style.paddingTop = this.value + 'px';
+        });
+
+        // --- DAFTAR CHIZIQLARI VA DINAMIK KURSORLAR LOGIKASI ---
+        let onaTiliKursorIshlatildi = false;
+
+        document.getElementById('select-chiziq-turi').addEventListener('change', function() {
+            const tur = this.value;
+
+            oqVaroq.classList.remove('ona-tili-fon', 'matematika-fon');
+            oqVaroq.style.backgroundSize = '';
+
+            if (tur === 'ona-tili') {
+                oqVaroq.classList.add('ona-tili-fon');
+                oqVaroq.style.backgroundSize = '100% ' + sliderOnaTiliSize.value + 'px';
+                hoshiya.style.display = 'block';
+                onaTiliSizeContainer.style.display = 'block';
+                katakSizeContainer.style.display = 'none';
+            } else if (tur === 'matematika') {
+                oqVaroq.classList.add('matematika-fon');
+                const pz = sliderKatakSize.value + 'px ';
+                oqVaroq.style.backgroundSize = pz + pz;
+                hoshiya.style.display = 'block';
+                katakSizeContainer.style.display = 'block';
+                onaTiliSizeContainer.style.display = 'none';
+            } else {
+                hoshiya.style.display = 'none';
+                katakSizeContainer.style.display = 'none';
+                onaTiliSizeContainer.style.display = 'none';
+            }
+        });
+
+        // Ona tili chiziqlari kursori surilganda
+        sliderOnaTiliSize.addEventListener('input', function() {
+            if (document.getElementById('select-chiziq-turi').value === 'ona-tili') {
+                onaTiliKursorIshlatildi = true;
+                oqVaroq.style.backgroundSize = '100% ' + this.value + 'px';
+            }
+        });
+
+        // Kataklar o'lchami kursor surilganda
+        sliderKatakSize.addEventListener('input', function() {
+            if (document.getElementById('select-chiziq-turi').value === 'matematika') {
+                const pz = this.value + 'px ';
+                oqVaroq.style.backgroundSize = pz + pz;
+            }
+        });
+
+        // --- MATN RANGI LOGIKASI ---
+        const pickerMatnRangi = document.getElementById('picker-matn-rangi');
+        pickerMatnRangi.addEventListener('input', function() {
+            outputMatn.style.color = this.value;
+        });
+
+        const matnDoirachalari = document.querySelectorAll('#circles-matn-rangi .color-circle');
+        matnDoirachalari.forEach(circle => {
+            circle.addEventListener('click', function() {
+                const rang = this.style.backgroundColor;
+                outputMatn.style.color = rang;
+                pickerMatnRangi.value = rgbToHex(rang);
+            });
+        });
+
+        // --- VAROQ RANGI LOGIKASI ---
+        const pickerVaroqRangi = document.getElementById('picker-varoq-rangi');
+        pickerVaroqRangi.addEventListener('input', function() {
+            oqVaroq.style.backgroundColor = this.value;
+        });
+
+        const varoqDoirachalari = document.querySelectorAll('#circles-varoq-rangi .color-circle');
+        varoqDoirachalari.forEach(circle => {
+            circle.addEventListener('click', function() {
+                const rang = this.style.backgroundColor;
+                oqVaroq.style.backgroundColor = rang;
+                pickerVaroqRangi.value = rgbToHex(rang);
+            });
+        });
+
+        // RGB formatni HEX formatga o'tkazish
+        function rgbToHex(rgb) {
+            if (rgb.startsWith('#')) return rgb;
+            const rgbValues = rgb.match(/\d+/g);
+            if (!rgbValues) return '#ffffff';
+            return "#" + rgbValues.slice(0, 3).map(x => {
+                const hex = parseInt(x).toString(16);
+                return hex.length === 1 ? "0" + hex : hex;
+            }).join("");
+        }
+
+        // --- TOGGLES (SWITCHES) ---
+        document.getElementById('toggle-soya').addEventListener('change', function() {
+            oqVaroq.style.boxShadow = this.checked ? '0px 25px 50px rgba(0, 0, 0, 0.3), inset 0 0 40px rgba(0, 0, 0, 0.1)' : 'none';
+        });
+
+        document.getElementById('toggle-chegara').addEventListener('change', function() {
+            oqVaroq.style.border = this.checked ? 'none' : '1px dashed rgba(0,0,0,0.2)';
+        });
+
+        // --- MULTIPLATFORMALIK YUKLAB OLISH (JPEG LOGIKASI - PC VA ANDROID) ---
+        document.getElementById('btn-yuklab').addEventListener('click', function() {
+            const v_element = document.getElementById('oq-varoq');
+
+            // Yuqori sifatli va barcha qurilmalarda bir xil chiqishi uchun render opsiyalari
+            const opsiyalar = {
+                scale: 2, // Rasm xira bo'lmasligi uchun tiniqlik ko'rsatkichi
+                useCORS: true, // Google shriflarini to'g'ri o'qib olish kafolati
+                backgroundColor: null,
+                logging: false
+            };
+
+            html2canvas(v_element, opsiyalar).then(canvas => {
+                // Sifatli JPEG formatiga o'tkazish
+                const rasmUrl = canvas.toDataURL('image/jpeg', 0.95);
+
+                // Yuklab olish uchun vaqtinchalik havola yaratish (Kompyuter va Android brauzerlar uchun universal)
+                const havola = document.createElement('a');
+                havola.href = rasmUrl;
+                havola.download = 'husnihat_daftar_' + Date.now() + '.jpg';
+
+                document.body.appendChild(havola);
+                havola.click();
+                document.body.removeChild(havola);
+            }).catch(error => {
+                console.error("Yuklab olishda xatolik yuz berdi:", error);
+                alert("Rasmni yaratishda muammo bo'ldi. Brauzeringizni tekshiring.");
+            });
+        });
+    </script>
+</body>
+</html>
