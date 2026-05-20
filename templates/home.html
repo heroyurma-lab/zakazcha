@@ -73,8 +73,6 @@ min-height:42px;
 word-break:break-word;
 }
 
-/* INPUT */
-
 .input-box{
 background:white;
 border-radius:18px;
@@ -93,8 +91,6 @@ font-size:15px;
 line-height:1.7;
 font-family:monospace;
 }
-
-/* PAPER */
 
 .paper-wrap{
 padding:12px;
@@ -140,8 +136,6 @@ background:rgba(255,0,0,.4);
 z-index:3;
 }
 
-/* LINE TYPES */
-
 .paper.lines{
 background-image:
 linear-gradient(rgba(173,216,230,.7) 1px, transparent 1px);
@@ -158,15 +152,14 @@ background-image:
 radial-gradient(circle, rgba(173,216,230,.8) 1px, transparent 1px);
 }
 
-/* MOBILE TOOLBAR */
+/* TOOLBAR */
 
 .mobile-toolbar{
 position:fixed;
 bottom:0;
 left:0;
 right:0;
-background:rgba(255,255,255,.92);
-backdrop-filter:blur(15px);
+background:#ffffff;
 border-top:1px solid #dbe2ef;
 z-index:999;
 display:flex;
@@ -298,6 +291,20 @@ margin-top:8px;
 cursor:pointer;
 }
 
+/* OVERLAY WITHOUT BLUR */
+
+.overlay{
+position:fixed;
+inset:0;
+background:transparent;
+display:none;
+z-index:1100;
+}
+
+.overlay.show{
+display:block;
+}
+
 /* DESKTOP */
 
 @media(min-width:950px){
@@ -369,21 +376,9 @@ font-weight:800;
 cursor:pointer;
 }
 
-.overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.45);
-backdrop-filter:blur(4px);
-display:none;
-z-index:1100;
-}
-
-.overlay.show{
-display:block;
-}
-
 </style>
 </head>
+
 <body>
 
 <div class="overlay" id="overlay"></div>
@@ -395,13 +390,16 @@ display:block;
 <div class="top-box">
 
 <div class="preview-box">
-<div class="preview-title">Shrift Preview</div>
+<div class="preview-title">Preview</div>
 <div id="previewText">Salom dunyo</div>
 </div>
 
 <div class="input-box">
-<div class="preview-title">Matn kiriting</div>
-<textarea id="inputText" placeholder="Matnni shu yerga yozing yoki paste qiling..."></textarea>
+<div class="preview-title">Matn</div>
+
+<textarea id="inputText"
+placeholder="Matn yozing yoki paste qiling..."></textarea>
+
 </div>
 
 </div>
@@ -412,7 +410,9 @@ display:block;
 
 <div class="group">
 <label>Shrift</label>
+
 <select id="fontSelect">
+
 <option value="'Charmonman', cursive">Charmonman</option>
 <option value="'Marck Script', cursive">Marck Script</option>
 <option value="'Bad Script', cursive">Bad Script</option>
@@ -422,98 +422,99 @@ display:block;
 <option value="'Nothing You Could Do', cursive">Nothing You Could Do</option>
 <option value="'Rock Salt', cursive">Rock Salt</option>
 <option value="'Permanent Marker', sans-serif">Permanent Marker</option>
-<option value="'Montserrat Subrayada', sans-serif">Subrayada</option>
+
 </select>
+
 </div>
 
 <div class="group">
-<label>Matn kattaligi</label>
+
+<label>Kattalik</label>
+
 <div class="range-wrap">
-<input type="range" id="fontSize" min="12" max="40" value="18">
+
+<input type="range"
+id="fontSize"
+min="12"
+max="40"
+value="18">
+
 <div class="val" id="fontSizeVal">18</div>
+
 </div>
+
 </div>
 
 <div class="group">
+
 <label>Qator balandligi</label>
+
 <div class="range-wrap">
-<input type="range" id="lineHeight" min="1.5" max="4" step="0.1" value="2">
+
+<input type="range"
+id="lineHeight"
+min="1.5"
+max="4"
+step="0.1"
+value="2">
+
 <div class="val" id="lineHeightVal">2</div>
+
 </div>
+
 </div>
 
 <div class="group">
-<label>Harflar oralig'i</label>
-<div class="range-wrap">
-<input type="range" id="letterSpacing" min="0" max="10" step="0.5" value="0">
-<div class="val" id="letterVal">0</div>
-</div>
-</div>
 
-<div class="group">
-<label>So'z oralig'i</label>
-<div class="range-wrap">
-<input type="range" id="wordSpacing" min="0" max="20" value="0">
-<div class="val" id="wordVal">0</div>
-</div>
-</div>
-
-<div class="group">
-<label>Matn tepaga/pastga</label>
-<div class="range-wrap">
-<input type="range" id="topSpacing" min="10" max="180" value="40">
-<div class="val" id="topVal">40</div>
-</div>
-</div>
-
-<div class="group">
 <label>Chiziq turi</label>
+
 <select id="lineType">
+
 <option value="none">Oq</option>
 <option value="lines">Chiziqli</option>
 <option value="grid">Katakli</option>
 <option value="dot">Nuqtali</option>
+
 </select>
+
 </div>
 
-<div class="group" id="lineSizeWrap">
+<div class="group">
+
 <label>Chiziq oralig'i</label>
+
 <div class="range-wrap">
-<input type="range" id="lineSize" min="15" max="70" value="32">
+
+<input type="range"
+id="lineSize"
+min="15"
+max="70"
+value="32">
+
 <div class="val" id="lineSizeVal">32</div>
+
 </div>
+
 </div>
 
 <div class="group">
+
 <label>Matn rangi</label>
-<input type="color" id="textColor" value="#0000ff">
+
+<input type="color"
+id="textColor"
+value="#0000ff">
+
 </div>
 
 <div class="group">
+
 <label>Varoq rangi</label>
-<input type="color" id="paperColor" value="#ffffff">
-</div>
 
-<div class="group">
-<label>Qalinlik</label>
-<div class="range-wrap">
-<input type="range" id="fontWeight" min="100" max="900" step="100" value="400">
-<div class="val" id="weightVal">400</div>
-</div>
-</div>
+<input type="color"
+id="paperColor"
+value="#ffffff">
 
-<div class="group">
-<label>
-<input type="checkbox" id="shadowToggle" checked>
- Soya
-</label>
-</div>
-
-<div class="group">
-<label>
-<input type="checkbox" id="marginToggle">
- Hoshiya
-</label>
 </div>
 
 <button class="download-btn" id="downloadBtn">
@@ -542,21 +543,27 @@ Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...
 
 </div>
 
-<!-- MOBILE TOOLBAR -->
-
 <div class="mobile-toolbar">
 
-<button class="tool-btn" onclick="openDrawer('drawer1')">✏️ Text</button>
+<button class="tool-btn"
+onclick="openDrawer('drawer1')">
+✏️ Text
+</button>
 
-<button class="tool-btn" onclick="openDrawer('drawer2')">🎨 Style</button>
+<button class="tool-btn"
+onclick="openDrawer('drawer2')">
+📄 Varoq
+</button>
 
-<button class="tool-btn" onclick="openDrawer('drawer3')">📄 Varoq</button>
-
-<button class="tool-btn" onclick="openDrawer('drawer4')">⚙️ Extra</button>
+<button class="tool-btn"
+onclick="openDrawer('drawer3')">
+🎨 Rang
+</button>
 
 <button class="next-btn">></button>
 
-<button class="tool-btn blue" id="mobileDownload">
+<button class="tool-btn blue"
+id="mobileDownload">
 ⬇
 </button>
 
@@ -571,27 +578,43 @@ Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...
 </div>
 
 <div class="group">
+
 <label>Shrift</label>
-<select id="mFont"></select>
+
+<select id="mFont">
+
+<option value="'Charmonman', cursive">Charmonman</option>
+<option value="'Marck Script', cursive">Marck Script</option>
+<option value="'Bad Script', cursive">Bad Script</option>
+<option value="'Caveat', cursive">Caveat</option>
+<option value="'Kalam', cursive">Kalam</option>
+
+</select>
+
 </div>
 
 <div class="group">
+
 <label>Kattalik</label>
+
 <div class="range-wrap">
-<input type="range" id="mFontSize" min="12" max="40" value="18">
+
+<input type="range"
+id="mFontSize"
+min="12"
+max="40"
+value="18">
+
 <div class="val" id="mFontVal">18</div>
-</div>
+
 </div>
 
-<div class="group">
-<label>Qalinlik</label>
-<div class="range-wrap">
-<input type="range" id="mWeight" min="100" max="900" step="100" value="400">
-<div class="val" id="mWeightVal">400</div>
-</div>
 </div>
 
-<button class="closeBtn" onclick="closeDrawers()">Yopish</button>
+<button class="closeBtn"
+onclick="closeDrawers()">
+Yopish
+</button>
 
 </div>
 
@@ -604,30 +627,42 @@ Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...
 </div>
 
 <div class="group">
-<label>Qator balandligi</label>
-<div class="range-wrap">
-<input type="range" id="mLineHeight" min="1.5" max="4" step="0.1" value="2">
-<div class="val" id="mLineVal">2</div>
-</div>
+
+<label>Chiziq turi</label>
+
+<select id="mLineType">
+
+<option value="none">Oq</option>
+<option value="lines">Chiziqli</option>
+<option value="grid">Katakli</option>
+<option value="dot">Nuqtali</option>
+
+</select>
+
 </div>
 
 <div class="group">
-<label>Harf oralig'i</label>
+
+<label>Chiziq oralig'i</label>
+
 <div class="range-wrap">
-<input type="range" id="mLetter" min="0" max="10" step="0.5" value="0">
-<div class="val" id="mLetterVal">0</div>
-</div>
+
+<input type="range"
+id="mLineSize"
+min="15"
+max="70"
+value="32">
+
+<div class="val" id="mLineSizeVal">32</div>
+
 </div>
 
-<div class="group">
-<label>So'z oralig'i</label>
-<div class="range-wrap">
-<input type="range" id="mWord" min="0" max="20" value="0">
-<div class="val" id="mWordVal">0</div>
-</div>
 </div>
 
-<button class="closeBtn" onclick="closeDrawers()">Yopish</button>
+<button class="closeBtn"
+onclick="closeDrawers()">
+Yopish
+</button>
 
 </div>
 
@@ -640,97 +675,69 @@ Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...
 </div>
 
 <div class="group">
-<label>Chiziq turi</label>
-<select id="mLineType">
-<option value="none">Oq</option>
-<option value="lines">Chiziqli</option>
-<option value="grid">Katakli</option>
-<option value="dot">Nuqtali</option>
-</select>
-</div>
 
-<div class="group">
-<label>Chiziq oralig'i</label>
-<div class="range-wrap">
-<input type="range" id="mLineSize" min="15" max="70" value="32">
-<div class="val" id="mLineSizeVal">32</div>
-</div>
-</div>
-
-<div class="group">
-<label>Varoq rangi</label>
-<input type="color" id="mPaperColor" value="#ffffff">
-</div>
-
-<div class="group">
 <label>Matn rangi</label>
-<input type="color" id="mTextColor" value="#0000ff">
-</div>
 
-<button class="closeBtn" onclick="closeDrawers()">Yopish</button>
+<input type="color"
+id="mTextColor"
+value="#0000ff">
 
-</div>
-
-<!-- DRAWER 4 -->
-
-<div class="drawer" id="drawer4">
-
-<div class="drawer-top">
-<div class="drawer-line"></div>
 </div>
 
 <div class="group">
-<label>Matn tepaga/pastga</label>
-<div class="range-wrap">
-<input type="range" id="mTop" min="10" max="180" value="40">
-<div class="val" id="mTopVal">40</div>
-</div>
+
+<label>Varoq rangi</label>
+
+<input type="color"
+id="mPaperColor"
+value="#ffffff">
+
 </div>
 
-<div class="group">
-<label>
-<input type="checkbox" id="mShadow" checked>
- Qog'oz soyasi
-</label>
-</div>
-
-<div class="group">
-<label>
-<input type="checkbox" id="mMargin">
- Hoshiya
-</label>
-</div>
-
-<button class="closeBtn" onclick="closeDrawers()">Yopish</button>
+<button class="closeBtn"
+onclick="closeDrawers()">
+Yopish
+</button>
 
 </div>
 
 <script>
 
-const inputText = document.getElementById("inputText");
-const paperText = document.getElementById("paperText");
-const previewText = document.getElementById("previewText");
-const paper = document.getElementById("paper");
-const overlay = document.getElementById("overlay");
+const inputText =
+document.getElementById("inputText");
 
-const fontSelect = document.getElementById("fontSelect");
-const mFont = document.getElementById("mFont");
+const paperText =
+document.getElementById("paperText");
 
-mFont.innerHTML = fontSelect.innerHTML;
+const previewText =
+document.getElementById("previewText");
+
+const paper =
+document.getElementById("paper");
+
+const overlay =
+document.getElementById("overlay");
 
 inputText.addEventListener("input",()=>{
 
 const val = inputText.value.trim();
 
-paperText.textContent = val || "Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...";
-previewText.textContent = val || "Salom dunyo";
+paperText.textContent =
+val ||
+"Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...";
+
+previewText.textContent =
+val || "Salom dunyo";
 
 });
 
 function syncRange(id,valId,callback){
 
-const el = document.getElementById(id);
-const val = document.getElementById(valId);
+const el =
+document.getElementById(id);
+
+const val =
+document.getElementById(valId);
 
 el.addEventListener("input",()=>{
 
@@ -744,10 +751,16 @@ callback(el.value);
 
 function applyLineType(type){
 
-paper.classList.remove("lines","grid","dot");
+paper.classList.remove(
+"lines",
+"grid",
+"dot"
+);
 
 if(type !== "none"){
+
 paper.classList.add(type);
+
 }
 
 updateLineSize();
@@ -760,167 +773,164 @@ const size =
 document.getElementById("lineSize").value;
 
 if(paper.classList.contains("lines")){
-paper.style.backgroundSize = "100% "+size+"px";
+
+paper.style.backgroundSize =
+"100% "+size+"px";
+
 }
 
 if(paper.classList.contains("grid")){
-paper.style.backgroundSize = size+"px "+size+"px";
+
+paper.style.backgroundSize =
+size+"px "+size+"px";
+
 }
 
 if(paper.classList.contains("dot")){
-paper.style.backgroundSize = size+"px "+size+"px";
+
+paper.style.backgroundSize =
+size+"px "+size+"px";
+
 }
 
 }
 
 /* DESKTOP */
 
-fontSelect.addEventListener("change",()=>{
+document.getElementById("fontSelect")
+.addEventListener("change",(e)=>{
 
-paperText.style.fontFamily = fontSelect.value;
-previewText.style.fontFamily = fontSelect.value;
+paperText.style.fontFamily =
+e.target.value;
+
+previewText.style.fontFamily =
+e.target.value;
 
 });
 
-syncRange("fontSize","fontSizeVal",(v)=>{
-paperText.style.fontSize = v+"px";
-previewText.style.fontSize = v+"px";
-});
+syncRange(
+"fontSize",
+"fontSizeVal",
+(v)=>{
 
-syncRange("lineHeight","lineHeightVal",(v)=>{
-paperText.style.lineHeight = v+"em";
-});
+paperText.style.fontSize =
+v+"px";
 
-syncRange("letterSpacing","letterVal",(v)=>{
-paperText.style.letterSpacing = v+"px";
-});
+previewText.style.fontSize =
+v+"px";
 
-syncRange("wordSpacing","wordVal",(v)=>{
-paperText.style.wordSpacing = v+"px";
-});
+}
+);
 
-syncRange("topSpacing","topVal",(v)=>{
-paperText.style.paddingTop = v+"px";
-});
+syncRange(
+"lineHeight",
+"lineHeightVal",
+(v)=>{
 
-syncRange("lineSize","lineSizeVal",(v)=>{
+paperText.style.lineHeight =
+v+"em";
+
+}
+);
+
+syncRange(
+"lineSize",
+"lineSizeVal",
+(v)=>{
+
 updateLineSize();
-});
 
-syncRange("fontWeight","weightVal",(v)=>{
-paperText.style.fontWeight = v;
-});
+}
+);
 
 document.getElementById("lineType")
 .addEventListener("change",(e)=>{
+
 applyLineType(e.target.value);
+
 });
 
 document.getElementById("textColor")
 .addEventListener("input",(e)=>{
-paperText.style.color = e.target.value;
-previewText.style.color = e.target.value;
+
+paperText.style.color =
+e.target.value;
+
+previewText.style.color =
+e.target.value;
+
 });
 
 document.getElementById("paperColor")
 .addEventListener("input",(e)=>{
-paper.style.backgroundColor = e.target.value;
-});
 
-document.getElementById("shadowToggle")
-.addEventListener("change",(e)=>{
-
-paper.style.boxShadow =
-e.target.checked
-?
-"0 25px 60px rgba(0,0,0,.20), inset 0 0 20px rgba(0,0,0,.05)"
-:
-"none";
-
-});
-
-document.getElementById("marginToggle")
-.addEventListener("change",(e)=>{
-
-document.getElementById("marginLine")
-.style.display =
-e.target.checked ? "block" : "none";
+paper.style.backgroundColor =
+e.target.value;
 
 });
 
 /* MOBILE */
 
-mFont.addEventListener("change",()=>{
+document.getElementById("mFont")
+.addEventListener("change",(e)=>{
 
-paperText.style.fontFamily = mFont.value;
-previewText.style.fontFamily = mFont.value;
+paperText.style.fontFamily =
+e.target.value;
+
+previewText.style.fontFamily =
+e.target.value;
 
 });
 
-syncRange("mFontSize","mFontVal",(v)=>{
-paperText.style.fontSize = v+"px";
-previewText.style.fontSize = v+"px";
-});
+syncRange(
+"mFontSize",
+"mFontVal",
+(v)=>{
 
-syncRange("mWeight","mWeightVal",(v)=>{
-paperText.style.fontWeight = v;
-});
+paperText.style.fontSize =
+v+"px";
 
-syncRange("mLineHeight","mLineVal",(v)=>{
-paperText.style.lineHeight = v+"em";
-});
+previewText.style.fontSize =
+v+"px";
 
-syncRange("mLetter","mLetterVal",(v)=>{
-paperText.style.letterSpacing = v+"px";
-});
-
-syncRange("mWord","mWordVal",(v)=>{
-paperText.style.wordSpacing = v+"px";
-});
-
-syncRange("mTop","mTopVal",(v)=>{
-paperText.style.paddingTop = v+"px";
-});
+}
+);
 
 document.getElementById("mLineType")
 .addEventListener("change",(e)=>{
+
 applyLineType(e.target.value);
+
 });
 
-syncRange("mLineSize","mLineSizeVal",(v)=>{
+syncRange(
+"mLineSize",
+"mLineSizeVal",
+(v)=>{
+
 document.getElementById("lineSize").value = v;
+
 updateLineSize();
+
+}
+);
+
+document.getElementById("mTextColor")
+.addEventListener("input",(e)=>{
+
+paperText.style.color =
+e.target.value;
+
+previewText.style.color =
+e.target.value;
+
 });
 
 document.getElementById("mPaperColor")
 .addEventListener("input",(e)=>{
-paper.style.backgroundColor = e.target.value;
-});
 
-document.getElementById("mTextColor")
-.addEventListener("input",(e)=>{
-paperText.style.color = e.target.value;
-previewText.style.color = e.target.value;
-});
-
-document.getElementById("mShadow")
-.addEventListener("change",(e)=>{
-
-paper.style.boxShadow =
-e.target.checked
-?
-"0 25px 60px rgba(0,0,0,.20), inset 0 0 20px rgba(0,0,0,.05)"
-:
-"none";
-
-});
-
-document.getElementById("mMargin")
-.addEventListener("change",(e)=>{
-
-document.getElementById("marginLine")
-.style.display =
-e.target.checked ? "block" : "none";
+paper.style.backgroundColor =
+e.target.value;
 
 });
 
@@ -935,20 +945,18 @@ document.getElementById(id)
 
 overlay.classList.add("show");
 
-document.body.style.overflow="hidden";
-
 }
 
 function closeDrawers(){
 
 document.querySelectorAll(".drawer")
 .forEach(d=>{
+
 d.classList.remove("open");
+
 });
 
 overlay.classList.remove("show");
-
-document.body.style.overflow="";
 
 }
 
@@ -958,32 +966,22 @@ overlay.onclick = closeDrawers;
 
 function downloadPaper(){
 
-const btns = document.querySelectorAll(".download-btn,#mobileDownload");
-
-btns.forEach(b=>{
-b.innerHTML="⏳";
-});
-
 html2canvas(paper,{
 scale:3,
 useCORS:true,
 backgroundColor:"#ffffff"
 }).then(canvas=>{
 
-const link = document.createElement("a");
+const link =
+document.createElement("a");
 
-link.href = canvas.toDataURL("image/jpeg",0.97);
+link.href =
+canvas.toDataURL("image/jpeg",0.97);
 
 link.download =
-"husnihat_"+Date.now()+".jpg";
+"husnihat.jpg";
 
 link.click();
-
-}).finally(()=>{
-
-btns.forEach(b=>{
-b.innerHTML="⬇";
-});
 
 });
 
@@ -994,8 +992,6 @@ document.getElementById("downloadBtn")
 
 document.getElementById("mobileDownload")
 .addEventListener("click",downloadPaper);
-
-/* INIT */
 
 applyLineType("none");
 
