@@ -1,889 +1,852 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Husnihat Premium</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;700&family=Charmonman:wght@400;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Montserrat+Subrayada&family=Reenie+Beanie&family=Nothing+You+Could+Do&family=Permanent+Marker&family=Rock+Salt&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-:root{
---bg:#dce6f5;
---panel:#ffffff;
---accent:#2563eb;
---accent2:#e2574c;
---text:#1e293b;
---muted:#64748b;
-}
-
-html,body{
-height:100%;
-overflow:hidden;
-font-family:'Segoe UI',sans-serif;
-background:linear-gradient(180deg,#dce6f5,#eef4ff);
-}
-
-/* APP */
-
-#app{
-display:grid;
-grid-template-columns:1fr 260px 1fr;
-height:100vh;
-}
-
-/* LEFT */
-
-#left-col{
-padding:18px;
-display:flex;
-flex-direction:column;
-gap:10px;
-}
-
-#col-title{
-font-size:12px;
-font-weight:800;
-letter-spacing:.08em;
-text-transform:uppercase;
-color:#64748b;
-}
-
-#input-matn{
-flex:1;
-
-background:#fff8c5;
-
-border:
-1px solid rgba(0,0,0,.06);
-
-box-shadow:
-0 8px 25px rgba(0,0,0,.08);
-
-border-radius:16px;
-
-padding:18px;
-
-font-size:15px;
-line-height:1.8;
-
-resize:none;
-outline:none;
-
-color:#111;
-
-/* KURSOR */
-caret-color:#2563eb;
-}
-
-/* SETTINGS */
-
-#settings-col{
-background:#f7f9ff;
-border-left:1px solid rgba(0,0,0,.05);
-border-right:1px solid rgba(0,0,0,.05);
-
-display:flex;
-flex-direction:column;
-overflow:hidden;
-}
-
-#settings-header{
-padding:16px;
-font-size:13px;
-font-weight:800;
-border-bottom:1px solid rgba(0,0,0,.05);
-}
-
-#settings-scroll{
-flex:1;
-overflow-y:auto;
-padding:14px;
-display:flex;
-flex-direction:column;
-gap:14px;
-}
-
-.sg{
-display:flex;
-flex-direction:column;
-gap:6px;
-
-background:#fff;
-padding:12px;
-
-border-radius:16px;
-
-border:
-1px solid rgba(0,0,0,.05);
-}
-
-.sg label{
-font-size:11px;
-font-weight:800;
-text-transform:uppercase;
-letter-spacing:.05em;
-color:#64748b;
-}
-
-.sg select,
-.sg input[type="color"]{
-width:100%;
-padding:10px;
-border-radius:12px;
-border:1px solid #dbe3f0;
-background:#fff;
-font-size:14px;
-}
-
-.range-row{
-display:flex;
-align-items:center;
-gap:10px;
-}
-
-.range-row input{
-flex:1;
-}
-
-.range-val{
-font-size:12px;
-font-weight:700;
-color:#2563eb;
-}
-
-.toggle-row{
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.color-circles{
-display:flex;
-gap:6px;
-flex-wrap:wrap;
-margin-top:6px;
-}
-
-.cc{
-width:24px;
-height:24px;
-border-radius:50%;
-cursor:pointer;
-border:2px solid rgba(0,0,0,.08);
-}
-
-/* RIGHT */
-
-#right-col{
-padding:14px;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:space-between;
-gap:14px;
-}
-
-#varoq-wrap{
-flex:1;
-width:100%;
-display:flex;
-justify-content:center;
-overflow:hidden;
-}
-
-#a4-sizer{
-width:100%;
-max-width:520px;
-position:relative;
-}
-
-#a4-sizer::before{
-content:'';
-display:block;
-padding-top:141.4%;
-}
-
-#oq-varoq{
-position:absolute;
-inset:0;
-
-background:#fff;
-
-border-radius:10px;
-
-overflow:hidden;
-
-box-shadow:
-0 20px 60px rgba(0,0,0,.18),
-inset 0 0 30px rgba(0,0,0,.04);
-}
-
-#hoshiya{
-display:none;
-
-position:absolute;
-top:0;
-right:52px;
-
-width:1.5px;
-height:100%;
-
-background:rgba(255,80,60,.55);
-
-z-index:2;
-}
-
-#output-matn{
-position:absolute;
-inset:0;
-
-padding:
-40px
-28px
-24px
-36px;
-
-font-family:'Charmonman',cursive;
-
-font-size:17px;
-
-line-height:2em;
-
-white-space:pre-wrap;
-
-color:#0000ff;
-
-overflow:hidden;
-}
-
-/* CHIZIQ */
-
-#oq-varoq.ona-tili-fon{
-background-image:
-linear-gradient(
-rgba(173,216,230,.6) 1.5px,
-transparent 1.5px
-);
-}
-
-#oq-varoq.matematika-fon{
-background-image:
-linear-gradient(rgba(173,216,230,.5) 1px,transparent 1px),
-linear-gradient(90deg,rgba(173,216,230,.5) 1px,transparent 1px);
-}
-
-#oq-varoq.doira-fon{
-background-image:
-radial-gradient(circle,rgba(173,216,230,.7) 1px,transparent 1px);
-}
-
-/* DOWNLOAD */
-
-#btn-yuklab{
-width:100%;
-max-width:340px;
-
-padding:14px;
-
-border:none;
-border-radius:16px;
-
-background:
-linear-gradient(
-135deg,
-#e2574c,
-#ff6a5f
-);
-
-color:#fff;
-
-font-size:15px;
-font-weight:800;
-
-cursor:pointer;
-
-box-shadow:
-0 8px 24px rgba(226,87,76,.35);
-}
-
-/* MOBILE */
-
-#mob-fab{
-display:none;
-
-position:fixed;
-
-right:14px;
-bottom:78px;
-
-width:60px;
-height:60px;
-
-border:none;
-border-radius:18px;
-
-background:
-linear-gradient(
-135deg,
-#2563eb,
-#3b82f6
-);
-
-color:#fff;
-
-font-size:24px;
-
-cursor:pointer;
-
-z-index:500;
-
-box-shadow:
-0 10px 30px rgba(37,99,235,.35);
-}
-
-#mob-drawer{
-
-position:fixed;
-
-top:0;
-right:0;
-bottom:0;
-
-width:92vw;
-max-width:420px;
-
-background:
-rgba(255,255,255,.98);
-
-z-index:400;
-
-padding:14px;
-
-overflow-y:auto;
-
-display:flex;
-flex-direction:column;
-gap:14px;
-
-transform:translateX(105%);
-
-transition:
-transform .28s ease;
-
-box-shadow:
--10px 0 40px rgba(0,0,0,.12);
-}
-
-#mob-drawer.open{
-transform:translateX(0);
-}
-
-.mob-top{
-display:flex;
-align-items:center;
-justify-content:space-between;
-}
-
-.mob-title{
-font-size:14px;
-font-weight:800;
-letter-spacing:.08em;
-color:#64748b;
-}
-
-.mob-close{
-width:38px;
-height:38px;
-border:none;
-border-radius:12px;
-background:#eef2ff;
-font-size:18px;
-cursor:pointer;
-}
-
-/* MOBILE */
-
-@media(max-width:860px){
-
-html,body{
-overflow:auto;
-}
-
-#app{
-display:flex;
-flex-direction:column;
-height:auto;
-}
-
-#settings-col{
-display:none;
-}
-
-#mob-fab{
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-#left-col{
-padding:10px 10px 4px;
-}
-
-#input-matn{
-min-height:95px;
-max-height:130px;
-flex:none;
-font-size:14px;
-}
-
-#right-col{
-padding:2px 6px 90px;
-}
-
-#a4-sizer{
-max-width:100%;
-}
-
-#output-matn{
-font-size:13px;
-
-padding:
-22px
-14px
-14px
-18px;
-}
-
-#btn-yuklab{
-position:fixed;
-
-left:10px;
-right:10px;
-bottom:10px;
-
-width:auto;
-max-width:none;
-
-z-index:300;
-}
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Husnihat — Qo'lyozma Generator</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;700&family=Charmonman:wght@400;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Montserrat+Subrayada&family=Reenie+Beanie&family=Nothing+You+Could+Do&family=Permanent+Marker&family=Rock+Salt&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #dce6f5;
+            --panel-bg: #ffffff;
+            --sidebar-bg: #f0f4fb;
+            --border: #d0d8e8;
+            --accent: #2563eb;
+            --accent2: #e2574c;
+            --text: #1e293b;
+            --muted: #64748b;
+            --label: #334155;
+            --input-bg: #fff;
+            --radius: 10px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.13);
+        }
+
+        html, body {
+            height: 100%;
+            background: var(--bg);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        #app {
+            display: grid;
+            grid-template-columns: 1fr 240px 1fr;
+            grid-template-rows: 1fr auto;
+            height: 100vh;
+            gap: 0;
+        }
+
+        #left-col {
+            padding: 16px 12px 16px 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #col-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            padding-left: 2px;
+        }
+
+        #input-matn {
+            flex: 1;
+            background: linear-gradient(160deg, #f9f97a 0%, #e6e64f 100%);
+            border: none;
+            border-radius: var(--radius);
+            box-shadow: 4px 6px 18px rgba(0,0,0,0.18);
+            padding: 24px 20px;
+            font-family: monospace;
+            font-size: 15px;
+            line-height: 1.75;
+            color: #1a1a1a;
+            resize: none;
+            outline: none;
+            width: 100%;
+        }
+
+        #input-matn::placeholder { color: #888; }
+
+        #settings-col {
+            background: var(--sidebar-bg);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #settings-header {
+            padding: 14px 14px 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--label);
+            flex-shrink: 0;
+        }
+
+        #settings-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #settings-scroll::-webkit-scrollbar { width: 4px; }
+        #settings-scroll::-webkit-scrollbar-thumb { background: #c7d0e0; border-radius: 4px; }
+
+        .sg { display: flex; flex-direction: column; gap: 5px; }
+
+        .sg label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .sg select, .sg input[type="color"] {
+            width: 100%;
+            padding: 7px 8px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: var(--input-bg);
+            font-size: 13px;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .sg select:focus { outline: 2px solid var(--accent); }
+
+        .sg input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+            height: 4px;
+            cursor: pointer;
+        }
+
+        .range-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .range-row input[type="range"] { flex: 1; }
+
+        .range-val {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            min-width: 28px;
+            text-align: right;
+        }
+
+        .color-circles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 2px;
+        }
+
+        .cc {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.12s, box-shadow 0.12s;
+        }
+
+        .cc:hover { transform: scale(1.2); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+        .cc.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 0;
+        }
+
+        .toggle-row span {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--label);
+        }
+
+        .sw { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+        .sw input { opacity: 0; width: 0; height: 0; }
+        .sw-track {
+            position: absolute; inset: 0;
+            background: #b3bcc9;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background .25s;
+        }
+        .sw-track::before {
+            content: '';
+            position: absolute;
+            width: 14px; height: 14px;
+            left: 3px; top: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform .25s;
+        }
+        .sw input:checked + .sw-track { background: var(--accent); }
+        .sw input:checked + .sw-track::before { transform: translateX(16px); }
+
+        #btn-yopish {
+            margin-top: 4px;
+            width: 100%;
+            padding: 9px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            transition: background .2s;
+        }
+        #btn-yopish:hover { background: #1d4ed8; }
+
+        #right-col {
+            padding: 16px 16px 16px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        #varoq-wrap {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #a4-sizer {
+            width: 100%;
+            max-width: 520px;
+            position: relative;
+        }
+
+        #a4-sizer::before {
+            content: '';
+            display: block;
+            padding-top: calc(100% * 1.414);
+        }
+
+        #oq-varoq {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            overflow: hidden;
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.22),
+                inset 0 0 30px rgba(0,0,0,0.06);
+            transition: background .3s, box-shadow .3s;
+        }
+
+        #hoshiya {
+            display: none;
+            position: absolute;
+            top: 0; right: 52px;
+            width: 1.5px;
+            height: 100%;
+            background: rgba(255,80,60,0.55);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        #output-matn {
+            position: absolute;
+            inset: 0;
+            color: #0000ff;
+            font-size: 17px;
+            line-height: 2em;
+            white-space: pre-wrap;
+            font-family: 'Charmonman', cursive;
+            word-wrap: break-word;
+            overflow: hidden;
+            z-index: 1;
+            padding: 40px 28px 24px 36px;
+            box-sizing: border-box;
+            transition: padding-top .15s;
+        }
+
+        #oq-varoq.ona-tili-fon {
+            background-image: linear-gradient(rgba(173,216,230,0.6) 1.5px, transparent 1.5px);
+        }
+        #oq-varoq.matematika-fon {
+            background-image:
+                linear-gradient(rgba(173,216,230,0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(173,216,230,0.5) 1px, transparent 1px);
+        }
+        #oq-varoq.doira-fon {
+            background-image: radial-gradient(circle, rgba(173,216,230,0.7) 1px, transparent 1px);
+        }
+
+        #btn-yuklab {
+            flex-shrink: 0;
+            width: 100%;
+            max-width: 320px;
+            padding: 13px;
+            background: var(--accent2);
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            letter-spacing: 0.06em;
+            box-shadow: 0 4px 14px rgba(226,87,76,0.3);
+            transition: background .2s, transform .1s;
+        }
+        #btn-yuklab:hover { background: #c0392b; }
+        #btn-yuklab:active { transform: scale(0.98); }
+
+        #status-bar {
+            grid-column: 1 / -1;
+            background: #e8eef8;
+            border-top: 1px solid var(--border);
+            padding: 5px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        #mob-fab {
+            display: none;
+            position: fixed;
+            bottom: 72px;
+            right: 16px;
+            z-index: 300;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(37,99,235,0.4);
+            align-items: center;
+            justify-content: center;
+        }
+
+        #mob-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 200;
+        }
+
+        #mob-drawer {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--sidebar-bg);
+            border-radius: 20px 20px 0 0;
+            max-height: 70vh;
+            overflow-y: auto;
+            z-index: 250;
+            padding: 16px 16px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transform: translateY(100%);
+            transition: transform .3s ease;
+        }
+
+        #mob-drawer.open { transform: translateY(0); }
+
+        .drawer-handle {
+            width: 44px;
+            height: 4px;
+            background: #c7d0e0;
+            border-radius: 4px;
+            margin: 0 auto 10px;
+        }
+
+        #mob-drawer .sg label { font-size: 12px; }
+        #mob-drawer .sg select, #mob-drawer .sg input[type="color"] { font-size: 14px; padding: 9px 10px; }
+
+        @media (max-width: 860px) {
+            html, body { overflow: auto; }
+
+            #app {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                overflow: visible;
+            }
+
+            #settings-col { display: none; }
+            #mob-fab { display: flex; }
+
+            #left-col {
+                padding: 12px 12px 8px;
+                height: auto;
+            }
+
+            #input-matn {
+                min-height: 160px;
+                flex: none;
+                font-size: 14px;
+            }
+
+            #right-col {
+                padding: 8px 12px 80px;
+                flex: 1;
+                min-height: 70vw;
+            }
+
+            #a4-sizer { max-width: 100%; }
+
+            #output-matn {
+                font-size: 13px;
+                line-height: 1.8em;
+                padding: 24px 16px 16px 22px;
+            }
+
+            #btn-yuklab {
+                position: fixed;
+                bottom: 12px;
+                left: 12px;
+                right: 12px;
+                width: auto;
+                max-width: none;
+                z-index: 100;
+                border-radius: 12px;
+            }
+
+            #status-bar { display: none; }
+        }
+
+        @media (max-width: 480px) {
+            #input-matn { min-height: 130px; font-size: 13px; }
+            #output-matn { font-size: 12px; }
+        }
+    </style>
 </head>
-
 <body>
 
 <div id="app">
 
-<div id="left-col">
+    <div id="left-col">
+        <div id="col-title">✏️ Matn kiriting</div>
+        <textarea id="input-matn" placeholder="Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing..."></textarea>
+    </div>
 
-<div id="col-title">
-✏️ MATN KIRITING
-</div>
+    <div id="settings-col">
+        <div id="settings-header">⚙️ Sozlamalar</div>
+        <div id="settings-scroll">
 
-<textarea id="input-matn" placeholder="Matn yozing..."></textarea>
+            <div class="sg">
+                <label>Shrift</label>
+                <select id="select-shrift">
+                    <optgroup label="Chiroyli qo'lyozmalar">
+                        <option value="'Charmonman', cursive" selected>Charmonman</option>
+                        <option value="'Marck Script', cursive">Marck Script</option>
+                        <option value="'Bad Script', cursive">Bad Script</option>
+                        <option value="'Caveat', cursive">Caveat</option>
+                        <option value="'Kalam', handwriting">Kalam</option>
+                    </optgroup>
+                    <optgroup label="Shoshilinch / Boshqa">
+                        <option value="'Reenie Beanie', cursive">Reenie Beanie</option>
+                        <option value="'Nothing You Could Do', cursive">Nothing You Could Do</option>
+                        <option value="'Rock Salt', cursive">Rock Salt</option>
+                        <option value="'Permanent Marker', sans-serif">Permanent Marker</option>
+                        <option value="'Montserrat Subrayada', sans-serif">Subrayada</option>
+                    </optgroup>
+                </select>
+            </div>
 
-</div>
+            <div class="sg">
+                <label>Matn kattaligi</label>
+                <select id="select-size">
+                    <option value="13px">13</option><option value="14px">14</option>
+                    <option value="15px">15</option><option value="16px">16</option>
+                    <option value="17px" selected>17</option><option value="18px">18</option>
+                    <option value="20px">20</option><option value="22px">22</option>
+                    <option value="24px">24</option><option value="26px">26</option>
+                    <option value="28px">28</option><option value="30px">30</option>
+                </select>
+            </div>
 
-<div id="settings-col">
+            <div class="sg">
+                <label>Matn qalinligi</label>
+                <div class="range-row">
+                    <input type="range" id="slider-weight" min="100" max="900" step="100" value="400">
+                    <span class="range-val" id="val-weight">400</span>
+                </div>
+            </div>
 
-<div id="settings-header">
-⚙️ SOZLAMALAR
-</div>
+            <div class="sg">
+                <label>Harflar yaqinligi</label>
+                <div class="range-row">
+                    <input type="range" id="slider-letter" min="0" max="6" step="0.5" value="0">
+                    <span class="range-val" id="val-letter">0</span>
+                </div>
+            </div>
 
-<div id="settings-scroll">
+            <div class="sg">
+                <label>So'zlar yaqinligi</label>
+                <div class="range-row">
+                    <input type="range" id="slider-word" min="0" max="12" step="1" value="0">
+                    <span class="range-val" id="val-word">0</span>
+                </div>
+            </div>
 
-<div class="sg">
-<label>Shrift</label>
+            <div class="sg">
+                <label>Qator balandligi</label>
+                <div class="range-row">
+                    <input type="range" id="slider-lh" min="1.5" max="3.5" step="0.1" value="2">
+                    <span class="range-val" id="val-lh">2</span>
+                </div>
+            </div>
 
-<select id="select-shrift">
+            <div class="sg">
+                <label>Matn pozitsiyasi (tepadan)</label>
+                <div class="range-row">
+                    <input type="range" id="slider-top" min="16" max="200" step="2" value="40">
+                    <span class="range-val" id="val-top">40</span>
+                </div>
+            </div>
 
-<option value="'Charmonman', cursive">Charmonman</option>
-<option value="'Marck Script', cursive">Marck Script</option>
-<option value="'Bad Script', cursive">Bad Script</option>
-<option value="'Caveat', cursive">Caveat</option>
-<option value="'Kalam', cursive">Kalam</option>
-<option value="'Reenie Beanie', cursive">Reenie Beanie</option>
-<option value="'Nothing You Could Do', cursive">Nothing You Could Do</option>
-<option value="'Rock Salt', cursive">Rock Salt</option>
-<option value="'Permanent Marker', sans-serif">Permanent Marker</option>
+            <div class="sg">
+                <label>Chiziq turi</label>
+                <select id="select-chiziq">
+                    <option value="oq" selected>Bo'sh oq</option>
+                    <option value="ona-tili">Chiziqli (Ona tili)</option>
+                    <option value="matematika">Katakli (Matematika)</option>
+                    <option value="doira">Nuqtali</option>
+                </select>
+            </div>
 
-</select>
-</div>
+            <div class="sg" id="wrap-chiziq-size" style="display:none">
+                <label>Chiziq masofasi</label>
+                <div class="range-row">
+                    <input type="range" id="slider-chiziq-size" min="15" max="60" step="1" value="32">
+                    <span class="range-val" id="val-chiziq">32</span>
+                </div>
+            </div>
 
-<div class="sg">
-<label>Matn kattaligi</label>
+            <div class="sg">
+                <label>Matn rangi</label>
+                <input type="color" id="picker-matn" value="#0000ff">
+                <div class="color-circles" id="cc-matn">
+                    <div class="cc" style="background:#0000ff" data-color="#0000ff"></div>
+                    <div class="cc" style="background:#000000" data-color="#000000"></div>
+                    <div class="cc" style="background:#8B0000" data-color="#8B0000"></div>
+                    <div class="cc" style="background:#228B22" data-color="#228B22"></div>
+                    <div class="cc" style="background:#4B0082" data-color="#4B0082"></div>
+                    <div class="cc" style="background:#b45309" data-color="#b45309"></div>
+                </div>
+            </div>
 
-<select id="select-size">
-<option value="13px">13</option>
-<option value="14px">14</option>
-<option value="15px">15</option>
-<option value="16px">16</option>
-<option value="17px" selected>17</option>
-<option value="18px">18</option>
-<option value="20px">20</option>
-<option value="22px">22</option>
-</select>
-</div>
+            <div class="sg">
+                <label>Varoq rangi</label>
+                <input type="color" id="picker-varoq" value="#ffffff">
+                <div class="color-circles" id="cc-varoq">
+                    <div class="cc" style="background:#ffffff" data-color="#ffffff"></div>
+                    <div class="cc" style="background:#fff9e6" data-color="#fff9e6"></div>
+                    <div class="cc" style="background:#f0f5ff" data-color="#f0f5ff"></div>
+                    <div class="cc" style="background:#eafaf1" data-color="#eafaf1"></div>
+                    <div class="cc" style="background:#fdf8f0" data-color="#fdf8f0"></div>
+                    <div class="cc" style="background:#fef3f2" data-color="#fef3f2"></div>
+                </div>
+            </div>
 
-<div class="sg">
-<label>Matn qalinligi</label>
+            <div class="toggle-row">
+                <span>Qog'oz soyasi</span>
+                <label class="sw">
+                    <input type="checkbox" id="tog-soya" checked>
+                    <span class="sw-track"></span>
+                </label>
+            </div>
 
-<div class="range-row">
+            <div class="toggle-row">
+                <span>Chegara chizig'i</span>
+                <label class="sw">
+                    <input type="checkbox" id="tog-chegara">
+                    <span class="sw-track"></span>
+                </label>
+            </div>
 
-<input type="range"
-id="slider-weight"
-min="100"
-max="900"
-step="100"
-value="400">
+            <div class="toggle-row">
+                <span>Hoshiya chizig'i</span>
+                <label class="sw">
+                    <input type="checkbox" id="tog-hoshiya">
+                    <span class="sw-track"></span>
+                </label>
+            </div>
 
-<span class="range-val" id="val-weight">
-400
-</span>
+            <button id="btn-yopish">✔ YOPISH</button>
 
-</div>
-</div>
+        </div>
+    </div>
 
-<div class="sg">
-<label>Harflar yaqinligi</label>
+    <div id="right-col">
+        <div id="varoq-wrap">
+            <div id="a4-sizer">
+                <div id="oq-varoq">
+                    <div id="hoshiya"></div>
+                    <div id="output-matn">Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...</div>
+                </div>
+            </div>
+        </div>
+        <button id="btn-yuklab">⬇ YUKLAB OLISH</button>
+    </div>
 
-<div class="range-row">
-
-<input type="range"
-id="slider-letter"
-min="0"
-max="6"
-step="0.5"
-value="0">
-
-<span class="range-val" id="val-letter">
-0
-</span>
-
-</div>
-</div>
-
-<div class="sg">
-<label>So'zlar yaqinligi</label>
-
-<div class="range-row">
-
-<input type="range"
-id="slider-word"
-min="0"
-max="12"
-step="1"
-value="0">
-
-<span class="range-val" id="val-word">
-0
-</span>
-
-</div>
-</div>
-
-<div class="sg">
-<label>Qator balandligi</label>
-
-<div class="range-row">
-
-<input type="range"
-id="slider-lh"
-min="1.5"
-max="3.5"
-step="0.1"
-value="2">
-
-<span class="range-val" id="val-lh">
-2
-</span>
-
-</div>
-</div>
-
-<div class="sg">
-<label>Matn pozitsiyasi</label>
-
-<div class="range-row">
-
-<input type="range"
-id="slider-top"
-min="10"
-max="150"
-step="2"
-value="40">
-
-<span class="range-val" id="val-top">
-40
-</span>
-
-</div>
-</div>
-
-<div class="sg">
-<label>Chiziq turi</label>
-
-<select id="select-chiziq">
-
-<option value="oq">Bo'sh oq</option>
-<option value="ona-tili">Chiziqli</option>
-<option value="matematika">Katakli</option>
-<option value="doira">Nuqtali</option>
-
-</select>
-
-</div>
-
-<div class="sg">
-<label>Matn rangi</label>
-
-<input type="color"
-id="picker-matn"
-value="#0000ff">
-
-</div>
-
-<div class="sg">
-<label>Varoq rangi</label>
-
-<input type="color"
-id="picker-varoq"
-value="#ffffff">
+    <div id="status-bar">
+        <span id="st-chars">Belgilar: 0</span>
+        <span>A4 format • 210 × 297 mm</span>
+        <span id="st-words">So'zlar: 0</span>
+    </div>
 
 </div>
 
-<div class="toggle-row">
-<label>Qog'oz soyasi</label>
-<input type="checkbox" id="tog-soya" checked>
-</div>
+<button id="mob-fab" onclick="openDrawer()">⚙</button>
+<div id="mob-overlay" onclick="closeDrawer()"></div>
 
-<div class="toggle-row">
-<label>Hoshiya</label>
-<input type="checkbox" id="tog-hoshiya">
-</div>
+<div id="mob-drawer">
+    <div class="drawer-handle"></div>
 
-</div>
+    <div class="sg">
+        <label>Shrift</label>
+        <select id="m-shrift">
+            <optgroup label="Chiroyli">
+                <option value="'Charmonman', cursive" selected>Charmonman</option>
+                <option value="'Marck Script', cursive">Marck Script</option>
+                <option value="'Bad Script', cursive">Bad Script</option>
+                <option value="'Caveat', cursive">Caveat</option>
+                <option value="'Kalam', handwriting">Kalam</option>
+            </optgroup>
+            <optgroup label="Boshqa">
+                <option value="'Reenie Beanie', cursive">Reenie Beanie</option>
+                <option value="'Nothing You Could Do', cursive">Nothing You Could Do</option>
+                <option value="'Rock Salt', cursive">Rock Salt</option>
+                <option value="'Permanent Marker', sans-serif">Permanent Marker</option>
+            </optgroup>
+        </select>
+    </div>
 
-</div>
+    <div class="sg">
+        <label>Matn kattaligi</label>
+        <select id="m-size">
+            <option value="12px">12</option><option value="13px">13</option>
+            <option value="14px">14</option><option value="15px" selected>15</option>
+            <option value="16px">16</option><option value="18px">18</option>
+            <option value="20px">20</option><option value="22px">22</option>
+            <option value="24px">24</option>
+        </select>
+    </div>
 
-<div id="right-col">
+    <div class="sg">
+        <label>Chiziq turi</label>
+        <select id="m-chiziq">
+            <option value="oq" selected>Bo'sh oq</option>
+            <option value="ona-tili">Chiziqli</option>
+            <option value="matematika">Katakli</option>
+            <option value="doira">Nuqtali</option>
+        </select>
+    </div>
 
-<div id="varoq-wrap">
+    <div class="sg">
+        <label>Matn rangi</label>
+        <input type="color" id="m-matn-rang" value="#0000ff">
+    </div>
 
-<div id="a4-sizer">
+    <div class="sg">
+        <label>Varoq rangi</label>
+        <input type="color" id="m-varoq-rang" value="#ffffff">
+    </div>
 
-<div id="oq-varoq">
+    <div class="sg">
+        <label>Qator balandligi</label>
+        <div class="range-row">
+            <input type="range" id="m-lh" min="1.5" max="3.5" step="0.1" value="1.8">
+            <span class="range-val" id="m-lh-val">1.8</span>
+        </div>
+    </div>
 
-<div id="hoshiya"></div>
+    <div class="sg">
+        <label>Matn pozitsiyasi</label>
+        <div class="range-row">
+            <input type="range" id="m-top" min="10" max="120" step="2" value="24">
+            <span class="range-val" id="m-top-val">24</span>
+        </div>
+    </div>
 
-<div id="output-matn">
-Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<button id="btn-yuklab">
-⬇ YUKLAB OLISH
-</button>
-
-</div>
-
+    <button id="btn-yopish-mob" onclick="closeDrawer()" style="width:100%;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">✔ YOPISH</button>
 </div>
 
 <script>
+const inputMatn  = document.getElementById('input-matn');
+const outputMatn = document.getElementById('output-matn');
+const oqVaroq    = document.getElementById('oq-varoq');
+const hoshiya    = document.getElementById('hoshiya');
 
-const inputMatn=document.getElementById('input-matn');
-const outputMatn=document.getElementById('output-matn');
-const oqVaroq=document.getElementById('oq-varoq');
-const hoshiya=document.getElementById('hoshiya');
+function $(id) { return document.getElementById(id); }
 
-function $(id){
-return document.getElementById(id);
+function setRange(id, valId, unit, fn) {
+    const el = $(id), vEl = $(valId);
+    el.addEventListener('input', () => {
+        const v = el.value;
+        if (vEl) vEl.textContent = parseFloat(v).toFixed(unit === 'float' ? 1 : 0);
+        fn(v);
+    });
 }
 
-inputMatn.addEventListener('input',()=>{
-
-outputMatn.textContent=
-inputMatn.value ||
-"Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...";
-
+inputMatn.addEventListener('input', function() {
+    const val = this.value || '';
+    outputMatn.textContent = val || "Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...";
+    updateStatus(val);
 });
 
-/* SELECT */
-
-$('select-shrift').addEventListener('change',e=>{
-outputMatn.style.fontFamily=e.target.value;
-});
-
-$('select-size').addEventListener('change',e=>{
-outputMatn.style.fontSize=e.target.value;
-});
-
-$('select-chiziq').addEventListener('change',e=>{
-
-oqVaroq.classList.remove(
-'ona-tili-fon',
-'matematika-fon',
-'doira-fon'
-);
-
-if(e.target.value==="ona-tili"){
-oqVaroq.classList.add('ona-tili-fon');
-oqVaroq.style.backgroundSize='100% 32px';
+function updateStatus(val) {
+    $('st-chars').textContent = 'Belgilar: ' + val.length;
+    $('st-words').textContent = "So'zlar: " + (val.trim() ? val.trim().split(/\s+/).length : 0);
 }
 
-if(e.target.value==="matematika"){
-oqVaroq.classList.add('matematika-fon');
-oqVaroq.style.backgroundSize='32px 32px';
+$('select-shrift').addEventListener('change', e => outputMatn.style.fontFamily = e.target.value);
+$('select-size').addEventListener('change', e => outputMatn.style.fontSize = e.target.value);
+
+setRange('slider-weight', 'val-weight', 'int',   v => outputMatn.style.fontWeight    = v);
+setRange('slider-letter', 'val-letter', 'float', v => outputMatn.style.letterSpacing = v + 'px');
+setRange('slider-word',   'val-word',   'int',   v => outputMatn.style.wordSpacing   = v + 'px');
+setRange('slider-lh',     'val-lh',     'float', v => { outputMatn.style.lineHeight  = v + 'em'; updateChiziqBg(); });
+setRange('slider-top',    'val-top',    'int',   v => outputMatn.style.paddingTop    = v + 'px');
+
+function applyChiziq(tur) {
+    oqVaroq.classList.remove('ona-tili-fon', 'matematika-fon', 'doira-fon');
+    oqVaroq.style.backgroundSize = '';
+    $('wrap-chiziq-size').style.display = 'none';
+    if (tur === 'ona-tili')    { oqVaroq.classList.add('ona-tili-fon');  $('wrap-chiziq-size').style.display = 'flex'; }
+    else if (tur === 'matematika') { oqVaroq.classList.add('matematika-fon'); $('wrap-chiziq-size').style.display = 'flex'; }
+    else if (tur === 'doira')  { oqVaroq.classList.add('doira-fon');     $('wrap-chiziq-size').style.display = 'flex'; }
+    updateChiziqBg();
 }
 
-if(e.target.value==="doira"){
-oqVaroq.classList.add('doira-fon');
-oqVaroq.style.backgroundSize='26px 26px';
+function updateChiziqBg() {
+    const tur = $('select-chiziq').value;
+    const sz  = $('slider-chiziq-size').value;
+    if (tur === 'ona-tili')    oqVaroq.style.backgroundSize = '100% ' + sz + 'px';
+    else if (tur === 'matematika') oqVaroq.style.backgroundSize = sz + 'px ' + sz + 'px';
+    else if (tur === 'doira')  oqVaroq.style.backgroundSize = sz + 'px ' + sz + 'px';
 }
 
+$('select-chiziq').addEventListener('change', e => applyChiziq(e.target.value));
+setRange('slider-chiziq-size', 'val-chiziq', 'int', () => updateChiziqBg());
+
+function applyMatnRangi(c) { outputMatn.style.color = c; }
+function applyVaroqRangi(c) { oqVaroq.style.backgroundColor = c; }
+
+$('picker-matn').addEventListener('input', e => applyMatnRangi(e.target.value));
+$('picker-varoq').addEventListener('input', e => applyVaroqRangi(e.target.value));
+
+document.querySelectorAll('#cc-matn .cc').forEach(cc => {
+    cc.addEventListener('click', function() {
+        document.querySelectorAll('#cc-matn .cc').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        applyMatnRangi(this.dataset.color);
+        $('picker-matn').value = this.dataset.color;
+    });
 });
 
-/* RANGE */
-
-$('slider-weight').addEventListener('input',e=>{
-
-outputMatn.style.fontWeight=e.target.value;
-
-$('val-weight').textContent=e.target.value;
-
+document.querySelectorAll('#cc-varoq .cc').forEach(cc => {
+    cc.addEventListener('click', function() {
+        document.querySelectorAll('#cc-varoq .cc').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        applyVaroqRangi(this.dataset.color);
+        $('picker-varoq').value = this.dataset.color;
+    });
 });
 
-$('slider-letter').addEventListener('input',e=>{
-
-outputMatn.style.letterSpacing=
-e.target.value+'px';
-
-$('val-letter').textContent=e.target.value;
-
+$('tog-soya').addEventListener('change', function() {
+    oqVaroq.style.boxShadow = this.checked
+        ? '0 20px 60px rgba(0,0,0,0.22), inset 0 0 30px rgba(0,0,0,0.06)'
+        : 'none';
 });
 
-$('slider-word').addEventListener('input',e=>{
-
-outputMatn.style.wordSpacing=
-e.target.value+'px';
-
-$('val-word').textContent=e.target.value;
-
+$('tog-chegara').addEventListener('change', function() {
+    oqVaroq.style.border = this.checked ? '1.5px dashed rgba(0,0,0,0.2)' : 'none';
 });
 
-$('slider-lh').addEventListener('input',e=>{
-
-outputMatn.style.lineHeight=
-e.target.value+'em';
-
-$('val-lh').textContent=e.target.value;
-
+$('tog-hoshiya').addEventListener('change', function() {
+    hoshiya.style.display = this.checked ? 'block' : 'none';
 });
 
-$('slider-top').addEventListener('input',e=>{
+function openDrawer() {
+    $('mob-drawer').classList.add('open');
+    $('mob-overlay').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+    $('mob-drawer').classList.remove('open');
+    $('mob-overlay').style.display = 'none';
+    document.body.style.overflow = '';
+}
 
-outputMatn.style.paddingTop=
-e.target.value+'px';
+$('m-shrift').addEventListener('change', e => outputMatn.style.fontFamily = e.target.value);
+$('m-size').addEventListener('change', e => outputMatn.style.fontSize = e.target.value);
+$('m-chiziq').addEventListener('change', e => applyChiziq(e.target.value));
+$('m-matn-rang').addEventListener('input', e => applyMatnRangi(e.target.value));
+$('m-varoq-rang').addEventListener('input', e => applyVaroqRangi(e.target.value));
+setRange('m-lh',  'm-lh-val',  'float', v => outputMatn.style.lineHeight = v + 'em');
+setRange('m-top', 'm-top-val', 'int',   v => outputMatn.style.paddingTop = v + 'px');
 
-$('val-top').textContent=e.target.value;
+$('btn-yuklab').addEventListener('click', function() {
+    const btn = this;
+    btn.textContent = '⏳ Tayyorlanmoqda...';
+    btn.disabled = true;
 
+    html2canvas(oqVaroq, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: oqVaroq.style.backgroundColor || '#ffffff',
+        logging: false
+    }).then(canvas => {
+        const url = canvas.toDataURL('image/jpeg', 0.96);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'husnihat_' + Date.now() + '.jpg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }).catch(err => {
+        alert("Xatolik yuz berdi. Qayta urinib ko'ring.");
+    }).finally(() => {
+        btn.textContent = '⬇ YUKLAB OLISH';
+        btn.disabled = false;
+    });
 });
 
-/* COLOR */
-
-$('picker-matn').addEventListener('input',e=>{
-outputMatn.style.color=e.target.value;
-});
-
-$('picker-varoq').addEventListener('input',e=>{
-oqVaroq.style.backgroundColor=e.target.value;
-});
-
-/* TOGGLE */
-
-$('tog-soya').addEventListener('change',e=>{
-
-oqVaroq.style.boxShadow=
-e.target.checked
-?
-'0 20px 60px rgba(0,0,0,.18), inset 0 0 30px rgba(0,0,0,.04)'
-:
-'none';
-
-});
-
-$('tog-hoshiya').addEventListener('change',e=>{
-
-hoshiya.style.display=
-e.target.checked
-?
-'block'
-:
-'none';
-
-});
-
-/* DOWNLOAD */
-
-$('btn-yuklab').addEventListener('click',function(){
-
-const btn=this;
-
-btn.innerHTML='⏳ Tayyorlanmoqda...';
-
-btn.disabled=true;
-
-html2canvas(oqVaroq,{
-scale:3,
-useCORS:true,
-backgroundColor:'#ffffff'
-})
-.then(canvas=>{
-
-const a=document.createElement('a');
-
-a.href=
-canvas.toDataURL(
-'image/jpeg',
-0.96
-);
-
-a.download='husnihat.jpg';
-
-a.click();
-
-})
-.finally(()=>{
-
-btn.innerHTML='⬇ YUKLAB OLISH';
-
-btn.disabled=false;
-
-});
-
-});
-
+document.querySelector('#cc-matn .cc').classList.add('active');
+document.querySelector('#cc-varoq .cc').classList.add('active');
+outputMatn.style.paddingTop = '40px';
 </script>
-
 </body>
 </html>
+mana toliq kod bu kodda mobile va pc uchun juda mukammal dizayn mos va qulay bolsin
