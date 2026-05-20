@@ -1,1103 +1,1005 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Husnihat — Qo'lyozma Generator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Husnihat Pro</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;700&family=Charmonman:wght@400;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Montserrat+Subrayada&family=Reenie+Beanie&family=Nothing+You+Could+Do&family=Permanent+Marker&family=Rock+Salt&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;700&family=Charmonman:wght@400;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Montserrat+Subrayada&family=Nothing+You+Could+Do&family=Permanent+Marker&family=Reenie+Beanie&family=Rock+Salt&display=swap" rel="stylesheet">
 
-        :root {
-            --bg: #dce6f5;
-            --panel-bg: #ffffff;
-            --sidebar-bg: #f0f4fb;
-            --border: #d0d8e8;
-            --accent: #2563eb;
-            --accent2: #e2574c;
-            --text: #1e293b;
-            --muted: #64748b;
-            --label: #334155;
-            --input-bg: #fff;
-            --radius: 10px;
-        }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-        html, body {
-            height: 100%;
-            background: var(--bg);
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            color: var(--text);
-            overflow: hidden;
-        }
+<style>
 
-        /* ===== DESKTOP LAYOUT ===== */
-        #app {
-            display: grid;
-            grid-template-columns: 1fr 240px 1fr;
-            grid-template-rows: 1fr auto;
-            height: 100vh;
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-        #left-col {
-            padding: 16px 12px 16px 16px;
-            display: flex;
-            flex-direction: column;
-        }
+body{
+font-family:Segoe UI,sans-serif;
+background:#dce7f7;
+overflow-x:hidden;
+color:#1e293b;
+}
 
-        #col-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--muted);
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            padding-left: 2px;
-        }
+:root{
+--accent:#2563eb;
+--bg:#dce7f7;
+--panel:#ffffff;
+--border:#d2dbec;
+}
 
-        #input-matn {
-            flex: 1;
-            background: linear-gradient(160deg, #f9f97a 0%, #e6e64f 100%);
-            border: none;
-            border-radius: var(--radius);
-            box-shadow: 4px 6px 18px rgba(0,0,0,0.18);
-            padding: 24px 20px;
-            font-family: monospace;
-            font-size: 15px;
-            line-height: 1.75;
-            color: #1a1a1a;
-            resize: none;
-            outline: none;
-            width: 100%;
-        }
-        #input-matn::placeholder { color: #888; }
+#app{
+min-height:100vh;
+display:flex;
+flex-direction:column;
+}
 
-        #settings-col {
-            background: var(--sidebar-bg);
-            border-left: 1px solid var(--border);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+/* TOP */
 
-        #settings-header {
-            padding: 14px 14px 10px;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--label);
-            flex-shrink: 0;
-        }
+.top-box{
+padding:12px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
 
-        #settings-scroll {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px 12px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        #settings-scroll::-webkit-scrollbar { width: 4px; }
-        #settings-scroll::-webkit-scrollbar-thumb { background: #c7d0e0; border-radius: 4px; }
+.preview-box{
+background:white;
+border-radius:18px;
+padding:14px;
+box-shadow:0 6px 20px rgba(0,0,0,.08);
+border:1px solid var(--border);
+}
 
-        .sg { display: flex; flex-direction: column; gap: 5px; }
-        .sg label {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-        .sg select, .sg input[type="color"] {
-            width: 100%;
-            padding: 7px 8px;
-            border: 1px solid var(--border);
-            border-radius: 7px;
-            background: var(--input-bg);
-            font-size: 13px;
-            color: var(--text);
-            cursor: pointer;
-        }
-        .sg select:focus { outline: 2px solid var(--accent); }
-        .sg input[type="range"] {
-            width: 100%;
-            accent-color: var(--accent);
-            height: 4px;
-            cursor: pointer;
-        }
+.preview-title{
+font-size:12px;
+font-weight:700;
+color:#64748b;
+margin-bottom:8px;
+text-transform:uppercase;
+}
 
-        .range-row { display: flex; align-items: center; gap: 8px; }
-        .range-row input[type="range"] { flex: 1; }
-        .range-val {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--accent);
-            min-width: 28px;
-            text-align: right;
-        }
+#previewText{
+font-size:24px;
+font-family:'Charmonman',cursive;
+color:#0000ff;
+min-height:42px;
+word-break:break-word;
+}
 
-        .color-circles { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
-        .cc {
-            width: 22px; height: 22px;
-            border-radius: 50%;
-            border: 2px solid rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: transform .12s, box-shadow .12s;
-        }
-        .cc:hover { transform: scale(1.2); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
-        .cc.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+/* INPUT */
 
-        .toggle-row {
-            display: flex; align-items: center; justify-content: space-between; padding: 2px 0;
-        }
-        .toggle-row span { font-size: 12px; font-weight: 600; color: var(--label); }
+.input-box{
+background:white;
+border-radius:18px;
+padding:14px;
+box-shadow:0 6px 20px rgba(0,0,0,.08);
+border:1px solid var(--border);
+}
 
-        .sw { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
-        .sw input { opacity: 0; width: 0; height: 0; }
-        .sw-track {
-            position: absolute; inset: 0;
-            background: #b3bcc9;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: background .25s;
-        }
-        .sw-track::before {
-            content: '';
-            position: absolute;
-            width: 14px; height: 14px;
-            left: 3px; top: 3px;
-            background: #fff;
-            border-radius: 50%;
-            transition: transform .25s;
-        }
-        .sw input:checked + .sw-track { background: var(--accent); }
-        .sw input:checked + .sw-track::before { transform: translateX(16px); }
+#inputText{
+width:100%;
+height:140px;
+resize:none;
+border:none;
+outline:none;
+font-size:15px;
+line-height:1.7;
+font-family:monospace;
+}
 
-        #btn-yopish {
-            margin-top: 4px;
-            width: 100%;
-            padding: 9px;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            letter-spacing: 0.04em;
-            transition: background .2s;
-        }
-        #btn-yopish:hover { background: #1d4ed8; }
+/* PAPER */
 
-        #right-col {
-            padding: 16px 16px 16px 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
+.paper-wrap{
+padding:12px;
+padding-bottom:120px;
+}
 
-        #varoq-wrap {
-            flex: 1;
-            width: 100%;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            overflow: hidden;
-        }
+.paper{
+position:relative;
+width:100%;
+max-width:850px;
+margin:auto;
+aspect-ratio:1/1.414;
+background:white;
+border-radius:16px;
+overflow:hidden;
+box-shadow:
+0 25px 60px rgba(0,0,0,.20),
+inset 0 0 20px rgba(0,0,0,.05);
+}
 
-        #a4-sizer {
-            width: 100%;
-            max-width: 520px;
-            position: relative;
-        }
-        #a4-sizer::before {
-            content: '';
-            display: block;
-            padding-top: calc(100% * 1.414);
-        }
+#paperText{
+position:absolute;
+inset:0;
+padding:40px 28px 28px 36px;
+white-space:pre-wrap;
+font-size:18px;
+line-height:2em;
+font-family:'Charmonman',cursive;
+color:#0000ff;
+z-index:2;
+word-break:break-word;
+overflow:hidden;
+}
 
-        #oq-varoq {
-            position: absolute;
-            inset: 0;
-            background: #fff;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.22), inset 0 0 30px rgba(0,0,0,0.06);
-            transition: background .3s;
-        }
+#marginLine{
+display:none;
+position:absolute;
+top:0;
+right:50px;
+width:2px;
+height:100%;
+background:rgba(255,0,0,.4);
+z-index:3;
+}
 
-        #hoshiya {
-            display: none;
-            position: absolute;
-            top: 0; right: 52px;
-            width: 1.5px;
-            height: 100%;
-            background: rgba(255,80,60,0.55);
-            z-index: 2;
-            pointer-events: none;
-        }
+/* LINE TYPES */
 
-        #output-matn {
-            position: absolute;
-            inset: 0;
-            color: #0000ff;
-            font-size: 17px;
-            line-height: 2em;
-            white-space: pre-wrap;
-            font-family: 'Charmonman', cursive;
-            word-wrap: break-word;
-            overflow: hidden;
-            z-index: 1;
-            padding: 40px 28px 24px 36px;
-            box-sizing: border-box;
-        }
+.paper.lines{
+background-image:
+linear-gradient(rgba(173,216,230,.7) 1px, transparent 1px);
+}
 
-        #oq-varoq.ona-tili-fon {
-            background-image: linear-gradient(rgba(173,216,230,0.6) 1.5px, transparent 1.5px);
-        }
-        #oq-varoq.matematika-fon {
-            background-image:
-                linear-gradient(rgba(173,216,230,0.5) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(173,216,230,0.5) 1px, transparent 1px);
-        }
-        #oq-varoq.doira-fon {
-            background-image: radial-gradient(circle, rgba(173,216,230,0.7) 1px, transparent 1px);
-        }
+.paper.grid{
+background-image:
+linear-gradient(rgba(173,216,230,.5) 1px, transparent 1px),
+linear-gradient(90deg, rgba(173,216,230,.5) 1px, transparent 1px);
+}
 
-        #btn-yuklab {
-            flex-shrink: 0;
-            width: 100%;
-            max-width: 320px;
-            padding: 13px;
-            background: var(--accent2);
-            color: #fff;
-            border: none;
-            border-radius: 9px;
-            font-size: 15px;
-            font-weight: 800;
-            cursor: pointer;
-            letter-spacing: 0.06em;
-            box-shadow: 0 4px 14px rgba(226,87,76,0.3);
-            transition: background .2s, transform .1s;
-        }
-        #btn-yuklab:hover { background: #c0392b; }
-        #btn-yuklab:active { transform: scale(0.98); }
+.paper.dot{
+background-image:
+radial-gradient(circle, rgba(173,216,230,.8) 1px, transparent 1px);
+}
 
-        #status-bar {
-            grid-column: 1 / -1;
-            background: #e8eef8;
-            border-top: 1px solid var(--border);
-            padding: 5px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--muted);
-        }
+/* MOBILE TOOLBAR */
 
-        /* ===== MOBILE LAYOUT ===== */
-        @media (max-width: 860px) {
-            html, body { overflow: hidden; height: 100%; }
+.mobile-toolbar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:rgba(255,255,255,.92);
+backdrop-filter:blur(15px);
+border-top:1px solid #dbe2ef;
+z-index:999;
+display:flex;
+align-items:center;
+padding:10px;
+gap:8px;
+overflow-x:auto;
+}
 
-            #app {
-                display: flex;
-                flex-direction: column;
-                height: 100vh;
-                overflow: hidden;
-            }
+.mobile-toolbar::-webkit-scrollbar{
+display:none;
+}
 
-            #settings-col { display: none; }
-            #status-bar { display: none; }
-            #left-col { display: none; }
-            #right-col {
-                padding: 0;
-                flex: 1;
-                min-height: 0;
-                gap: 0;
-                justify-content: flex-start;
-            }
+.tool-btn{
+flex-shrink:0;
+border:none;
+background:#edf2ff;
+padding:12px 15px;
+border-radius:14px;
+font-size:14px;
+font-weight:700;
+cursor:pointer;
+color:#1e293b;
+}
 
-            #varoq-wrap {
-                flex: 1;
-                min-height: 0;
-                padding: 10px 10px 6px;
-            }
+.tool-btn.blue{
+background:var(--accent);
+color:white;
+}
 
-            #a4-sizer { max-width: 100%; }
+.next-btn{
+min-width:48px;
+height:48px;
+border-radius:50%;
+border:none;
+background:#2563eb;
+color:white;
+font-size:22px;
+font-weight:700;
+cursor:pointer;
+flex-shrink:0;
+}
 
-            #output-matn {
-                font-size: 12px;
-                line-height: 1.9em;
-                padding: 20px 14px 14px 20px;
-            }
+/* DRAWERS */
 
-            #btn-yuklab { display: none; }
+.drawer{
+position:fixed;
+left:0;
+right:0;
+bottom:-100%;
+background:#f8fbff;
+border-radius:25px 25px 0 0;
+padding:20px;
+z-index:1200;
+max-height:78vh;
+overflow:auto;
+transition:.35s;
+box-shadow:0 -15px 40px rgba(0,0,0,.2);
+}
 
-            #mob-bottom {
-                flex-shrink: 0;
-                background: #fff;
-                border-top: 1.5px solid var(--border);
-                display: flex;
-                flex-direction: column;
-            }
+.drawer.open{
+bottom:0;
+}
 
-            #mob-top-row {
-                display: flex;
-                gap: 0;
-                border-bottom: 1px solid var(--border);
-            }
+.drawer-top{
+display:flex;
+justify-content:center;
+margin-bottom:16px;
+}
 
-            #mob-size-preview {
-                width: 72px;
-                flex-shrink: 0;
-                background: linear-gradient(135deg, #f0f4ff, #e4ebff);
-                border-right: 1px solid var(--border);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 22px;
-                font-weight: 700;
-                color: var(--accent);
-                font-family: 'Caveat', cursive;
-                user-select: none;
-                min-height: 52px;
-            }
+.drawer-line{
+width:60px;
+height:5px;
+background:#c5d0e5;
+border-radius:20px;
+}
 
-            #mob-textarea {
-                flex: 1;
-                border: none;
-                outline: none;
-                padding: 10px 12px;
-                font-family: monospace;
-                font-size: 14px;
-                line-height: 1.5;
-                color: #1a1a1a;
-                background: linear-gradient(160deg, #f9f97a 0%, #f0ec50 100%);
-                resize: none;
-                min-height: 52px;
-                max-height: 80px;
-            }
-            #mob-textarea::placeholder { color: #888; }
+.group{
+display:flex;
+flex-direction:column;
+gap:8px;
+margin-bottom:16px;
+}
 
-            #mob-controls-row {
-                display: flex;
-                align-items: stretch;
-                min-height: 52px;
-            }
+.group label{
+font-size:13px;
+font-weight:700;
+color:#475569;
+}
 
-            #mob-panels-wrap {
-                flex: 1;
-                overflow: hidden;
-                position: relative;
-            }
+.group select,
+.group input[type="color"]{
+width:100%;
+padding:11px;
+border-radius:12px;
+border:1px solid #d7deec;
+background:white;
+font-size:14px;
+}
 
-            .mob-panel {
-                position: absolute;
-                inset: 0;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 8px 10px;
-                overflow-x: auto;
-                overflow-y: hidden;
-                scrollbar-width: none;
-                transition: transform 0.28s ease, opacity 0.28s ease;
-            }
-            .mob-panel::-webkit-scrollbar { display: none; }
-            .mob-panel.hidden { transform: translateX(100%); opacity: 0; pointer-events: none; }
+.range-wrap{
+display:flex;
+align-items:center;
+gap:10px;
+}
 
-            #mob-nav-left, #mob-nav-right {
-                flex-shrink: 0;
-                width: 36px;
-                background: var(--sidebar-bg);
-                border: none;
-                cursor: pointer;
-                font-size: 18px;
-                color: var(--accent);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: background .15s;
-            }
-            #mob-nav-left { border-right: 1px solid var(--border); }
-            #mob-nav-right { border-left: 1px solid var(--border); }
-            #mob-nav-left:active, #mob-nav-right:active { background: #dce6f5; }
+.range-wrap input{
+flex:1;
+}
 
-            #mob-panel-dots {
-                display: flex;
-                gap: 4px;
-                align-items: center;
-                justify-content: center;
-                padding: 4px 0 5px;
-                border-top: 1px solid var(--border);
-            }
-            .dot {
-                width: 6px; height: 6px;
-                border-radius: 50%;
-                background: #c7d0e0;
-                transition: background .2s, transform .2s;
-            }
-            .dot.active { background: var(--accent); transform: scale(1.3); }
+.val{
+font-size:13px;
+font-weight:700;
+color:#2563eb;
+width:40px;
+text-align:right;
+}
 
-            #mob-bottom-row {
-                display: flex;
-                border-top: 1px solid var(--border);
-            }
-            #mob-btn-yuklab {
-                flex: 1;
-                padding: 11px;
-                background: var(--accent2);
-                color: #fff;
-                border: none;
-                font-size: 14px;
-                font-weight: 800;
-                cursor: pointer;
-                letter-spacing: 0.05em;
-                transition: background .2s;
-            }
-            #mob-btn-yuklab:active { background: #c0392b; }
+.closeBtn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:#2563eb;
+color:white;
+font-size:15px;
+font-weight:700;
+margin-top:8px;
+cursor:pointer;
+}
 
-            .mob-ctrl {
-                display: flex;
-                flex-direction: column;
-                gap: 3px;
-                flex-shrink: 0;
-            }
-            .mob-ctrl label {
-                font-size: 9px;
-                font-weight: 700;
-                color: var(--muted);
-                text-transform: uppercase;
-                letter-spacing: 0.04em;
-                white-space: nowrap;
-            }
-            .mob-ctrl select {
-                padding: 5px 6px;
-                border: 1px solid var(--border);
-                border-radius: 7px;
-                background: var(--input-bg);
-                font-size: 12px;
-                color: var(--text);
-                cursor: pointer;
-                outline: none;
-            }
-            .mob-ctrl input[type="color"] {
-                width: 44px;
-                height: 30px;
-                border: 1px solid var(--border);
-                border-radius: 7px;
-                cursor: pointer;
-                padding: 2px;
-            }
-            .mob-ctrl input[type="range"] {
-                width: 90px;
-                accent-color: var(--accent);
-            }
-            .mob-range-val {
-                font-size: 10px;
-                font-weight: 700;
-                color: var(--accent);
-                text-align: center;
-            }
+/* DESKTOP */
 
-            .mob-divider {
-                width: 1px;
-                align-self: stretch;
-                background: var(--border);
-                flex-shrink: 0;
-                margin: 4px 0;
-            }
+@media(min-width:950px){
 
-            .mob-toggle {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 3px;
-                flex-shrink: 0;
-            }
-            .mob-toggle label.top {
-                font-size: 9px;
-                font-weight: 700;
-                color: var(--muted);
-                text-transform: uppercase;
-                white-space: nowrap;
-            }
-        }
+body{
+overflow:hidden;
+}
 
-        @media (min-width: 861px) {
-            #mob-bottom { display: none; }
-        }
-    </style>
+#app{
+display:grid;
+grid-template-columns:330px 1fr;
+}
+
+.left{
+height:100vh;
+overflow:auto;
+padding-bottom:20px;
+border-right:1px solid #d4dceb;
+background:#eef4ff;
+}
+
+.paper-wrap{
+height:100vh;
+overflow:auto;
+padding:24px;
+padding-bottom:100px;
+}
+
+.mobile-toolbar{
+display:none;
+}
+
+.paper{
+max-width:760px;
+}
+
+#paperText{
+font-size:20px;
+}
+
+.desktop-settings{
+display:block !important;
+}
+
+}
+
+.desktop-settings{
+display:none;
+padding:12px;
+}
+
+.desktop-card{
+background:white;
+border-radius:18px;
+padding:14px;
+margin-bottom:12px;
+box-shadow:0 6px 20px rgba(0,0,0,.08);
+}
+
+.download-btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:16px;
+background:#e2574c;
+color:white;
+font-size:15px;
+font-weight:800;
+cursor:pointer;
+}
+
+.overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(4px);
+display:none;
+z-index:1100;
+}
+
+.overlay.show{
+display:block;
+}
+
+</style>
 </head>
 <body>
 
+<div class="overlay" id="overlay"></div>
+
 <div id="app">
 
-    <div id="left-col">
-        <div id="col-title">✏️ Matn kiriting</div>
-        <textarea id="input-matn" placeholder="Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing..."></textarea>
-    </div>
+<div class="left">
 
-    <div id="settings-col">
-        <div id="settings-header">⚙️ Sozlamalar</div>
-        <div id="settings-scroll">
+<div class="top-box">
 
-            <div class="sg">
-                <label>Shrift</label>
-                <select id="select-shrift">
-                    <optgroup label="Chiroyli qo'lyozmalar">
-                        <option value="'Charmonman', cursive" selected>Charmonman</option>
-                        <option value="'Marck Script', cursive">Marck Script</option>
-                        <option value="'Bad Script', cursive">Bad Script</option>
-                        <option value="'Caveat', cursive">Caveat</option>
-                        <option value="'Kalam', handwriting">Kalam</option>
-                    </optgroup>
-                    <optgroup label="Shoshilinch / Boshqa">
-                        <option value="'Reenie Beanie', cursive">Reenie Beanie</option>
-                        <option value="'Nothing You Could Do', cursive">Nothing You Could Do</option>
-                        <option value="'Rock Salt', cursive">Rock Salt</option>
-                        <option value="'Permanent Marker', sans-serif">Permanent Marker</option>
-                        <option value="'Montserrat Subrayada', sans-serif">Subrayada</option>
-                    </optgroup>
-                </select>
-            </div>
+<div class="preview-box">
+<div class="preview-title">Shrift Preview</div>
+<div id="previewText">Salom dunyo</div>
+</div>
 
-            <div class="sg">
-                <label>Matn kattaligi</label>
-                <select id="select-size">
-                    <option value="13px">13</option><option value="14px">14</option>
-                    <option value="15px">15</option><option value="16px">16</option>
-                    <option value="17px" selected>17</option><option value="18px">18</option>
-                    <option value="20px">20</option><option value="22px">22</option>
-                    <option value="24px">24</option><option value="26px">26</option>
-                    <option value="28px">28</option><option value="30px">30</option>
-                </select>
-            </div>
-
-            <div class="sg">
-                <label>Matn qalinligi</label>
-                <div class="range-row">
-                    <input type="range" id="slider-weight" min="100" max="900" step="100" value="400">
-                    <span class="range-val" id="val-weight">400</span>
-                </div>
-            </div>
-
-            <div class="sg">
-                <label>Harflar yaqinligi</label>
-                <div class="range-row">
-                    <input type="range" id="slider-letter" min="0" max="6" step="0.5" value="0">
-                    <span class="range-val" id="val-letter">0</span>
-                </div>
-            </div>
-
-            <div class="sg">
-                <label>So'zlar yaqinligi</label>
-                <div class="range-row">
-                    <input type="range" id="slider-word" min="0" max="12" step="1" value="0">
-                    <span class="range-val" id="val-word">0</span>
-                </div>
-            </div>
-
-            <div class="sg">
-                <label>Qator balandligi</label>
-                <div class="range-row">
-                    <input type="range" id="slider-lh" min="1.5" max="3.5" step="0.1" value="2">
-                    <span class="range-val" id="val-lh">2</span>
-                </div>
-            </div>
-
-            <div class="sg">
-                <label>Matn pozitsiyasi (tepadan)</label>
-                <div class="range-row">
-                    <input type="range" id="slider-top" min="16" max="200" step="2" value="40">
-                    <span class="range-val" id="val-top">40</span>
-                </div>
-            </div>
-
-            <div class="sg">
-                <label>Chiziq turi</label>
-                <select id="select-chiziq">
-                    <option value="oq" selected>Bo'sh oq</option>
-                    <option value="ona-tili">Chiziqli (Ona tili)</option>
-                    <option value="matematika">Katakli (Matematika)</option>
-                    <option value="doira">Nuqtali</option>
-                </select>
-            </div>
-
-            <div class="sg" id="wrap-chiziq-size" style="display:none">
-                <label>Chiziq masofasi</label>
-                <div class="range-row">
-                    <input type="range" id="slider-chiziq-size" min="15" max="60" step="1" value="32">
-                    <span class="range-val" id="val-chiziq">32</span>
-                </div>
-            </div>
-
-            <div class="sg">
-                <label>Matn rangi</label>
-                <input type="color" id="picker-matn" value="#0000ff">
-                <div class="color-circles" id="cc-matn">
-                    <div class="cc" style="background:#0000ff" data-color="#0000ff"></div>
-                    <div class="cc" style="background:#000000" data-color="#000000"></div>
-                    <div class="cc" style="background:#8B0000" data-color="#8B0000"></div>
-                    <div class="cc" style="background:#228B22" data-color="#228B22"></div>
-                    <div class="cc" style="background:#4B0082" data-color="#4B0082"></div>
-                    <div class="cc" style="background:#b45309" data-color="#b45309"></div>
-                </div>
-            </div>
-
-            <div class="sg">
-                <label>Varoq rangi</label>
-                <input type="color" id="picker-varoq" value="#ffffff">
-                <div class="color-circles" id="cc-varoq">
-                    <div class="cc" style="background:#ffffff" data-color="#ffffff"></div>
-                    <div class="cc" style="background:#fff9e6" data-color="#fff9e6"></div>
-                    <div class="cc" style="background:#f0f5ff" data-color="#f0f5ff"></div>
-                    <div class="cc" style="background:#eafaf1" data-color="#eafaf1"></div>
-                    <div class="cc" style="background:#fdf8f0" data-color="#fdf8f0"></div>
-                    <div class="cc" style="background:#fef3f2" data-color="#fef3f2"></div>
-                </div>
-            </div>
-
-            <div class="toggle-row">
-                <span>Qog'oz soyasi</span>
-                <label class="sw"><input type="checkbox" id="tog-soya" checked><span class="sw-track"></span></label>
-            </div>
-            <div class="toggle-row">
-                <span>Chegara chizig'i</span>
-                <label class="sw"><input type="checkbox" id="tog-chegara"><span class="sw-track"></span></label>
-            </div>
-            <div class="toggle-row">
-                <span>Hoshiya chizig'i</span>
-                <label class="sw"><input type="checkbox" id="tog-hoshiya"><span class="sw-track"></span></label>
-            </div>
-
-            <button id="btn-yopish">✔ YOPISH</button>
-        </div>
-    </div>
-
-    <div id="right-col">
-        <div id="varoq-wrap">
-            <div id="a4-sizer">
-                <div id="oq-varoq">
-                    <div id="hoshiya"></div>
-                    <div id="output-matn">Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...</div>
-                </div>
-            </div>
-        </div>
-        <button id="btn-yuklab">⬇ YUKLAB OLISH</button>
-    </div>
-
-    <div id="status-bar">
-        <span id="st-chars">Belgilar: 0</span>
-        <span>A4 format • 210 × 297 mm</span>
-        <span id="st-words">So'zlar: 0</span>
-    </div>
+<div class="input-box">
+<div class="preview-title">Matn kiriting</div>
+<textarea id="inputText" placeholder="Matnni shu yerga yozing yoki paste qiling..."></textarea>
+</div>
 
 </div>
 
-<!-- ===== MOBILE BOTTOM PANEL ===== -->
-<div id="mob-bottom">
+<div class="desktop-settings">
 
-    <div id="mob-top-row">
-        <div id="mob-size-preview">Aa</div>
-        <textarea id="mob-textarea" placeholder="Matn yozing yoki joylashtiring..."></textarea>
-    </div>
+<div class="desktop-card">
 
-    <div id="mob-controls-row">
-        <button id="mob-nav-left" onclick="mobNav(-1)">‹</button>
+<div class="group">
+<label>Shrift</label>
+<select id="fontSelect">
+<option value="'Charmonman', cursive">Charmonman</option>
+<option value="'Marck Script', cursive">Marck Script</option>
+<option value="'Bad Script', cursive">Bad Script</option>
+<option value="'Caveat', cursive">Caveat</option>
+<option value="'Kalam', cursive">Kalam</option>
+<option value="'Reenie Beanie', cursive">Reenie Beanie</option>
+<option value="'Nothing You Could Do', cursive">Nothing You Could Do</option>
+<option value="'Rock Salt', cursive">Rock Salt</option>
+<option value="'Permanent Marker', sans-serif">Permanent Marker</option>
+<option value="'Montserrat Subrayada', sans-serif">Subrayada</option>
+</select>
+</div>
 
-        <div id="mob-panels-wrap">
+<div class="group">
+<label>Matn kattaligi</label>
+<div class="range-wrap">
+<input type="range" id="fontSize" min="12" max="40" value="18">
+<div class="val" id="fontSizeVal">18</div>
+</div>
+</div>
 
-            <!-- Panel 0: Shrift + Kattalik + Qalinlik -->
-            <div class="mob-panel" id="mob-panel-0">
-                <div class="mob-ctrl">
-                    <label>Shrift</label>
-                    <select id="m-shrift">
-                        <option value="'Charmonman', cursive" selected>Charmonman</option>
-                        <option value="'Marck Script', cursive">Marck Script</option>
-                        <option value="'Bad Script', cursive">Bad Script</option>
-                        <option value="'Caveat', cursive">Caveat</option>
-                        <option value="'Kalam', handwriting">Kalam</option>
-                        <option value="'Reenie Beanie', cursive">Reenie Beanie</option>
-                        <option value="'Nothing You Could Do', cursive">Nothing You Could</option>
-                        <option value="'Rock Salt', cursive">Rock Salt</option>
-                        <option value="'Permanent Marker', sans-serif">Perm. Marker</option>
-                        <option value="'Montserrat Subrayada', sans-serif">Subrayada</option>
-                    </select>
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-ctrl">
-                    <label>Kattalik</label>
-                    <select id="m-size">
-                        <option value="11px">11</option><option value="12px">12</option>
-                        <option value="13px">13</option><option value="14px">14</option>
-                        <option value="15px" selected>15</option><option value="16px">16</option>
-                        <option value="18px">18</option><option value="20px">20</option>
-                        <option value="22px">22</option><option value="24px">24</option>
-                    </select>
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-ctrl">
-                    <label>Qalinlik</label>
-                    <input type="range" id="m-weight" min="100" max="900" step="100" value="400">
-                    <div class="mob-range-val" id="m-weight-val">400</div>
-                </div>
-            </div>
+<div class="group">
+<label>Qator balandligi</label>
+<div class="range-wrap">
+<input type="range" id="lineHeight" min="1.5" max="4" step="0.1" value="2">
+<div class="val" id="lineHeightVal">2</div>
+</div>
+</div>
 
-            <!-- Panel 1: Oraliqlar -->
-            <div class="mob-panel hidden" id="mob-panel-1">
-                <div class="mob-ctrl">
-                    <label>Harf oralig'i</label>
-                    <input type="range" id="m-letter" min="0" max="6" step="0.5" value="0">
-                    <div class="mob-range-val" id="m-letter-val">0</div>
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-ctrl">
-                    <label>So'z oralig'i</label>
-                    <input type="range" id="m-word" min="0" max="12" step="1" value="0">
-                    <div class="mob-range-val" id="m-word-val">0</div>
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-ctrl">
-                    <label>Qator baland.</label>
-                    <input type="range" id="m-lh" min="1.5" max="3.5" step="0.1" value="2">
-                    <div class="mob-range-val" id="m-lh-val">2.0</div>
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-ctrl">
-                    <label>Tepadan</label>
-                    <input type="range" id="m-top" min="10" max="150" step="2" value="24">
-                    <div class="mob-range-val" id="m-top-val">24</div>
-                </div>
-            </div>
+<div class="group">
+<label>Harflar oralig'i</label>
+<div class="range-wrap">
+<input type="range" id="letterSpacing" min="0" max="10" step="0.5" value="0">
+<div class="val" id="letterVal">0</div>
+</div>
+</div>
 
-            <!-- Panel 2: Chiziqlar + Togglelar -->
-            <div class="mob-panel hidden" id="mob-panel-2">
-                <div class="mob-ctrl">
-                    <label>Chiziq turi</label>
-                    <select id="m-chiziq">
-                        <option value="oq" selected>Bo'sh oq</option>
-                        <option value="ona-tili">Chiziqli</option>
-                        <option value="matematika">Katakli</option>
-                        <option value="doira">Nuqtali</option>
-                    </select>
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-ctrl" id="m-chiziq-size-wrap">
-                    <label>Chiziq masofasi</label>
-                    <input type="range" id="m-chiziq-size" min="15" max="60" step="1" value="32">
-                    <div class="mob-range-val" id="m-chiziq-size-val">32</div>
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-toggle">
-                    <span style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;white-space:nowrap;">Soya</span>
-                    <label class="sw"><input type="checkbox" id="m-tog-soya" checked><span class="sw-track"></span></label>
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-toggle">
-                    <span style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;white-space:nowrap;">Chegara</span>
-                    <label class="sw"><input type="checkbox" id="m-tog-chegara"><span class="sw-track"></span></label>
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-toggle">
-                    <span style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;white-space:nowrap;">Hoshiya</span>
-                    <label class="sw"><input type="checkbox" id="m-tog-hoshiya"><span class="sw-track"></span></label>
-                </div>
-            </div>
+<div class="group">
+<label>So'z oralig'i</label>
+<div class="range-wrap">
+<input type="range" id="wordSpacing" min="0" max="20" value="0">
+<div class="val" id="wordVal">0</div>
+</div>
+</div>
 
-            <!-- Panel 3: Ranglar -->
-            <div class="mob-panel hidden" id="mob-panel-3">
-                <div class="mob-ctrl">
-                    <label>Matn rangi</label>
-                    <input type="color" id="m-matn-rang" value="#0000ff">
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-ctrl">
-                    <label>Varoq rangi</label>
-                    <input type="color" id="m-varoq-rang" value="#ffffff">
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-ctrl">
-                    <label>Tez ranglar</label>
-                    <div style="display:flex;flex-wrap:wrap;gap:5px;max-width:140px;">
-                        <div class="cc" style="background:#0000ff" data-target="matn" data-color="#0000ff"></div>
-                        <div class="cc" style="background:#000000" data-target="matn" data-color="#000000"></div>
-                        <div class="cc" style="background:#8B0000" data-target="matn" data-color="#8B0000"></div>
-                        <div class="cc" style="background:#228B22" data-target="matn" data-color="#228B22"></div>
-                        <div class="cc" style="background:#4B0082" data-target="matn" data-color="#4B0082"></div>
-                        <div class="cc" style="background:#b45309" data-target="matn" data-color="#b45309"></div>
-                    </div>
-                </div>
-                <div class="mob-divider"></div>
-                <div class="mob-ctrl">
-                    <label>Varoq tez</label>
-                    <div style="display:flex;flex-wrap:wrap;gap:5px;max-width:100px;">
-                        <div class="cc" style="background:#ffffff" data-target="varoq" data-color="#ffffff"></div>
-                        <div class="cc" style="background:#fff9e6" data-target="varoq" data-color="#fff9e6"></div>
-                        <div class="cc" style="background:#f0f5ff" data-target="varoq" data-color="#f0f5ff"></div>
-                        <div class="cc" style="background:#eafaf1" data-target="varoq" data-color="#eafaf1"></div>
-                        <div class="cc" style="background:#fdf8f0" data-target="varoq" data-color="#fdf8f0"></div>
-                        <div class="cc" style="background:#fef3f2" data-target="varoq" data-color="#fef3f2"></div>
-                    </div>
-                </div>
-            </div>
+<div class="group">
+<label>Matn tepaga/pastga</label>
+<div class="range-wrap">
+<input type="range" id="topSpacing" min="10" max="180" value="40">
+<div class="val" id="topVal">40</div>
+</div>
+</div>
 
-        </div>
+<div class="group">
+<label>Chiziq turi</label>
+<select id="lineType">
+<option value="none">Oq</option>
+<option value="lines">Chiziqli</option>
+<option value="grid">Katakli</option>
+<option value="dot">Nuqtali</option>
+</select>
+</div>
 
-        <button id="mob-nav-right" onclick="mobNav(1)">›</button>
-    </div>
+<div class="group" id="lineSizeWrap">
+<label>Chiziq oralig'i</label>
+<div class="range-wrap">
+<input type="range" id="lineSize" min="15" max="70" value="32">
+<div class="val" id="lineSizeVal">32</div>
+</div>
+</div>
 
-    <div id="mob-panel-dots">
-        <div class="dot active"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-    </div>
+<div class="group">
+<label>Matn rangi</label>
+<input type="color" id="textColor" value="#0000ff">
+</div>
 
-    <div id="mob-bottom-row">
-        <button id="mob-btn-yuklab">⬇ YUKLAB OLISH</button>
-    </div>
+<div class="group">
+<label>Varoq rangi</label>
+<input type="color" id="paperColor" value="#ffffff">
+</div>
+
+<div class="group">
+<label>Qalinlik</label>
+<div class="range-wrap">
+<input type="range" id="fontWeight" min="100" max="900" step="100" value="400">
+<div class="val" id="weightVal">400</div>
+</div>
+</div>
+
+<div class="group">
+<label>
+<input type="checkbox" id="shadowToggle" checked>
+ Soya
+</label>
+</div>
+
+<div class="group">
+<label>
+<input type="checkbox" id="marginToggle">
+ Hoshiya
+</label>
+</div>
+
+<button class="download-btn" id="downloadBtn">
+⬇ Yuklab olish
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="paper-wrap">
+
+<div class="paper" id="paper">
+
+<div id="marginLine"></div>
+
+<div id="paperText">
+Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MOBILE TOOLBAR -->
+
+<div class="mobile-toolbar">
+
+<button class="tool-btn" onclick="openDrawer('drawer1')">✏️ Text</button>
+
+<button class="tool-btn" onclick="openDrawer('drawer2')">🎨 Style</button>
+
+<button class="tool-btn" onclick="openDrawer('drawer3')">📄 Varoq</button>
+
+<button class="tool-btn" onclick="openDrawer('drawer4')">⚙️ Extra</button>
+
+<button class="next-btn">></button>
+
+<button class="tool-btn blue" id="mobileDownload">
+⬇
+</button>
+
+</div>
+
+<!-- DRAWER 1 -->
+
+<div class="drawer" id="drawer1">
+
+<div class="drawer-top">
+<div class="drawer-line"></div>
+</div>
+
+<div class="group">
+<label>Shrift</label>
+<select id="mFont"></select>
+</div>
+
+<div class="group">
+<label>Kattalik</label>
+<div class="range-wrap">
+<input type="range" id="mFontSize" min="12" max="40" value="18">
+<div class="val" id="mFontVal">18</div>
+</div>
+</div>
+
+<div class="group">
+<label>Qalinlik</label>
+<div class="range-wrap">
+<input type="range" id="mWeight" min="100" max="900" step="100" value="400">
+<div class="val" id="mWeightVal">400</div>
+</div>
+</div>
+
+<button class="closeBtn" onclick="closeDrawers()">Yopish</button>
+
+</div>
+
+<!-- DRAWER 2 -->
+
+<div class="drawer" id="drawer2">
+
+<div class="drawer-top">
+<div class="drawer-line"></div>
+</div>
+
+<div class="group">
+<label>Qator balandligi</label>
+<div class="range-wrap">
+<input type="range" id="mLineHeight" min="1.5" max="4" step="0.1" value="2">
+<div class="val" id="mLineVal">2</div>
+</div>
+</div>
+
+<div class="group">
+<label>Harf oralig'i</label>
+<div class="range-wrap">
+<input type="range" id="mLetter" min="0" max="10" step="0.5" value="0">
+<div class="val" id="mLetterVal">0</div>
+</div>
+</div>
+
+<div class="group">
+<label>So'z oralig'i</label>
+<div class="range-wrap">
+<input type="range" id="mWord" min="0" max="20" value="0">
+<div class="val" id="mWordVal">0</div>
+</div>
+</div>
+
+<button class="closeBtn" onclick="closeDrawers()">Yopish</button>
+
+</div>
+
+<!-- DRAWER 3 -->
+
+<div class="drawer" id="drawer3">
+
+<div class="drawer-top">
+<div class="drawer-line"></div>
+</div>
+
+<div class="group">
+<label>Chiziq turi</label>
+<select id="mLineType">
+<option value="none">Oq</option>
+<option value="lines">Chiziqli</option>
+<option value="grid">Katakli</option>
+<option value="dot">Nuqtali</option>
+</select>
+</div>
+
+<div class="group">
+<label>Chiziq oralig'i</label>
+<div class="range-wrap">
+<input type="range" id="mLineSize" min="15" max="70" value="32">
+<div class="val" id="mLineSizeVal">32</div>
+</div>
+</div>
+
+<div class="group">
+<label>Varoq rangi</label>
+<input type="color" id="mPaperColor" value="#ffffff">
+</div>
+
+<div class="group">
+<label>Matn rangi</label>
+<input type="color" id="mTextColor" value="#0000ff">
+</div>
+
+<button class="closeBtn" onclick="closeDrawers()">Yopish</button>
+
+</div>
+
+<!-- DRAWER 4 -->
+
+<div class="drawer" id="drawer4">
+
+<div class="drawer-top">
+<div class="drawer-line"></div>
+</div>
+
+<div class="group">
+<label>Matn tepaga/pastga</label>
+<div class="range-wrap">
+<input type="range" id="mTop" min="10" max="180" value="40">
+<div class="val" id="mTopVal">40</div>
+</div>
+</div>
+
+<div class="group">
+<label>
+<input type="checkbox" id="mShadow" checked>
+ Qog'oz soyasi
+</label>
+</div>
+
+<div class="group">
+<label>
+<input type="checkbox" id="mMargin">
+ Hoshiya
+</label>
+</div>
+
+<button class="closeBtn" onclick="closeDrawers()">Yopish</button>
 
 </div>
 
 <script>
-const outputMatn = document.getElementById('output-matn');
-const oqVaroq    = document.getElementById('oq-varoq');
-const hoshiya    = document.getElementById('hoshiya');
-function $id(id) { return document.getElementById(id); }
 
-const PLACEHOLDER = "Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...";
+const inputText = document.getElementById("inputText");
+const paperText = document.getElementById("paperText");
+const previewText = document.getElementById("previewText");
+const paper = document.getElementById("paper");
+const overlay = document.getElementById("overlay");
 
-function applyFont(v)       { outputMatn.style.fontFamily    = v; }
-function applySize(v)       { outputMatn.style.fontSize      = v; updateSizePreview(v); }
-function applyWeight(v)     { outputMatn.style.fontWeight    = v; }
-function applyLetter(v)     { outputMatn.style.letterSpacing = v + 'px'; }
-function applyWord(v)       { outputMatn.style.wordSpacing   = v + 'px'; }
-function applyLH(v)         { outputMatn.style.lineHeight    = v + 'em'; updateChiziqBg(); }
-function applyTop(v)        { outputMatn.style.paddingTop    = v + 'px'; }
-function applyMatnRang(c)   { outputMatn.style.color         = c; }
-function applyVaroqRang(c)  { oqVaroq.style.backgroundColor = c; }
+const fontSelect = document.getElementById("fontSelect");
+const mFont = document.getElementById("mFont");
 
-function updateSizePreview(v) {
-    const n = parseInt(v);
-    $id('mob-size-preview').textContent = n ? n + 'px' : 'Aa';
+mFont.innerHTML = fontSelect.innerHTML;
+
+inputText.addEventListener("input",()=>{
+
+const val = inputText.value.trim();
+
+paperText.textContent = val || "Qo'lyozmaga aylantirmoqchi bo'lgan matningizni shu yerga yozing...";
+previewText.textContent = val || "Salom dunyo";
+
+});
+
+function syncRange(id,valId,callback){
+
+const el = document.getElementById(id);
+const val = document.getElementById(valId);
+
+el.addEventListener("input",()=>{
+
+val.textContent = el.value;
+
+callback(el.value);
+
+});
+
 }
 
-function applyChiziq(tur) {
-    oqVaroq.classList.remove('ona-tili-fon', 'matematika-fon', 'doira-fon');
-    oqVaroq.style.backgroundSize = '';
+function applyLineType(type){
 
-    const showSize = (tur !== 'oq');
-    const dWrap = $id('wrap-chiziq-size');
-    if (dWrap) dWrap.style.display = showSize ? 'flex' : 'none';
-    const mWrap = $id('m-chiziq-size-wrap');
-    if (mWrap) mWrap.style.visibility = showSize ? 'visible' : 'hidden';
+paper.classList.remove("lines","grid","dot");
 
-    if (tur === 'ona-tili')        oqVaroq.classList.add('ona-tili-fon');
-    else if (tur === 'matematika') oqVaroq.classList.add('matematika-fon');
-    else if (tur === 'doira')      oqVaroq.classList.add('doira-fon');
-
-    updateChiziqBg();
+if(type !== "none"){
+paper.classList.add(type);
 }
 
-function getChiziqSize() {
-    return $id('slider-chiziq-size').value || $id('m-chiziq-size').value || 32;
+updateLineSize();
+
 }
 
-function updateChiziqBg() {
-    const tur = $id('select-chiziq').value;
-    const sz  = getChiziqSize();
-    if (tur === 'ona-tili')        oqVaroq.style.backgroundSize = '100% ' + sz + 'px';
-    else if (tur === 'matematika') oqVaroq.style.backgroundSize = sz + 'px ' + sz + 'px';
-    else if (tur === 'doira')      oqVaroq.style.backgroundSize = sz + 'px ' + sz + 'px';
+function updateLineSize(){
+
+const size =
+document.getElementById("lineSize").value;
+
+if(paper.classList.contains("lines")){
+paper.style.backgroundSize = "100% "+size+"px";
 }
 
-function syncText(val) {
-    outputMatn.textContent = val || PLACEHOLDER;
-    const chars = $id('st-chars');
-    const words = $id('st-words');
-    if (chars) chars.textContent = 'Belgilar: ' + val.length;
-    if (words) words.textContent = "So'zlar: " + (val.trim() ? val.trim().split(/\s+/).length : 0);
+if(paper.classList.contains("grid")){
+paper.style.backgroundSize = size+"px "+size+"px";
 }
 
-$id('input-matn').addEventListener('input', function() { syncText(this.value); });
-$id('mob-textarea').addEventListener('input', function() { syncText(this.value); });
-
-function dRange(id, valId, decimals, fn) {
-    const el = $id(id), vEl = $id(valId);
-    el.addEventListener('input', () => {
-        const v = el.value;
-        if (vEl) vEl.textContent = parseFloat(v).toFixed(decimals);
-        fn(v);
-    });
+if(paper.classList.contains("dot")){
+paper.style.backgroundSize = size+"px "+size+"px";
 }
 
-$id('select-shrift').addEventListener('change', e => applyFont(e.target.value));
-$id('select-size').addEventListener('change',   e => applySize(e.target.value));
-dRange('slider-weight',     'val-weight', 0, applyWeight);
-dRange('slider-letter',     'val-letter', 1, applyLetter);
-dRange('slider-word',       'val-word',   0, applyWord);
-dRange('slider-lh',         'val-lh',     1, applyLH);
-dRange('slider-top',        'val-top',    0, applyTop);
-dRange('slider-chiziq-size','val-chiziq', 0, () => updateChiziqBg());
-
-$id('select-chiziq').addEventListener('change', e => {
-    applyChiziq(e.target.value);
-    $id('m-chiziq').value = e.target.value;
-});
-
-$id('picker-matn').addEventListener('input',  e => applyMatnRang(e.target.value));
-$id('picker-varoq').addEventListener('input', e => applyVaroqRang(e.target.value));
-
-document.querySelectorAll('#cc-matn .cc').forEach(cc => {
-    cc.addEventListener('click', function() {
-        document.querySelectorAll('#cc-matn .cc').forEach(c => c.classList.remove('active'));
-        this.classList.add('active');
-        applyMatnRang(this.dataset.color);
-        $id('picker-matn').value = this.dataset.color;
-    });
-});
-document.querySelectorAll('#cc-varoq .cc').forEach(cc => {
-    cc.addEventListener('click', function() {
-        document.querySelectorAll('#cc-varoq .cc').forEach(c => c.classList.remove('active'));
-        this.classList.add('active');
-        applyVaroqRang(this.dataset.color);
-        $id('picker-varoq').value = this.dataset.color;
-    });
-});
-
-$id('tog-soya').addEventListener('change', function() {
-    oqVaroq.style.boxShadow = this.checked
-        ? '0 20px 60px rgba(0,0,0,0.22), inset 0 0 30px rgba(0,0,0,0.06)'
-        : 'none';
-});
-$id('tog-chegara').addEventListener('change', function() {
-    oqVaroq.style.border = this.checked ? '1.5px dashed rgba(0,0,0,0.2)' : 'none';
-});
-$id('tog-hoshiya').addEventListener('change', function() {
-    hoshiya.style.display = this.checked ? 'block' : 'none';
-});
-
-function mRange(id, valId, decimals, fn) {
-    const el = $id(id), vEl = $id(valId);
-    el.addEventListener('input', () => {
-        const v = el.value;
-        if (vEl) vEl.textContent = parseFloat(v).toFixed(decimals);
-        fn(v);
-    });
 }
 
-$id('m-shrift').addEventListener('change', e => { applyFont(e.target.value); $id('select-shrift').value = e.target.value; });
-$id('m-size').addEventListener('change',   e => { applySize(e.target.value); $id('select-size').value   = e.target.value; });
-mRange('m-weight', 'm-weight-val', 0, v => { applyWeight(v); $id('slider-weight').value = v; $id('val-weight').textContent = v; });
-mRange('m-letter', 'm-letter-val', 1, v => { applyLetter(v); $id('slider-letter').value = v; $id('val-letter').textContent = parseFloat(v).toFixed(1); });
-mRange('m-word',   'm-word-val',   0, v => { applyWord(v);   $id('slider-word').value   = v; $id('val-word').textContent   = v; });
-mRange('m-lh',     'm-lh-val',     1, v => { applyLH(v);     $id('slider-lh').value     = v; $id('val-lh').textContent     = parseFloat(v).toFixed(1); });
-mRange('m-top',    'm-top-val',    0, v => { applyTop(v);    $id('slider-top').value    = v; $id('val-top').textContent    = v; });
+/* DESKTOP */
 
-$id('m-chiziq').addEventListener('change', e => {
-    $id('select-chiziq').value = e.target.value;
-    applyChiziq(e.target.value);
+fontSelect.addEventListener("change",()=>{
+
+paperText.style.fontFamily = fontSelect.value;
+previewText.style.fontFamily = fontSelect.value;
+
 });
 
-mRange('m-chiziq-size', 'm-chiziq-size-val', 0, v => {
-    $id('slider-chiziq-size').value = v;
-    $id('val-chiziq').textContent = v;
-    updateChiziqBg();
+syncRange("fontSize","fontSizeVal",(v)=>{
+paperText.style.fontSize = v+"px";
+previewText.style.fontSize = v+"px";
 });
 
-$id('m-matn-rang').addEventListener('input',  e => { applyMatnRang(e.target.value);  $id('picker-matn').value  = e.target.value; });
-$id('m-varoq-rang').addEventListener('input', e => { applyVaroqRang(e.target.value); $id('picker-varoq').value = e.target.value; });
-
-document.querySelectorAll('.mob-panel .cc').forEach(cc => {
-    cc.addEventListener('click', function() {
-        const target = this.dataset.target;
-        const color  = this.dataset.color;
-        if (target === 'matn') {
-            applyMatnRang(color);
-            $id('m-matn-rang').value  = color;
-            $id('picker-matn').value  = color;
-        } else {
-            applyVaroqRang(color);
-            $id('m-varoq-rang').value = color;
-            $id('picker-varoq').value = color;
-        }
-    });
+syncRange("lineHeight","lineHeightVal",(v)=>{
+paperText.style.lineHeight = v+"em";
 });
 
-$id('m-tog-soya').addEventListener('change', function() {
-    $id('tog-soya').checked = this.checked;
-    oqVaroq.style.boxShadow = this.checked
-        ? '0 20px 60px rgba(0,0,0,0.22), inset 0 0 30px rgba(0,0,0,0.06)'
-        : 'none';
-});
-$id('m-tog-chegara').addEventListener('change', function() {
-    $id('tog-chegara').checked = this.checked;
-    oqVaroq.style.border = this.checked ? '1.5px dashed rgba(0,0,0,0.2)' : 'none';
-});
-$id('m-tog-hoshiya').addEventListener('change', function() {
-    $id('tog-hoshiya').checked = this.checked;
-    hoshiya.style.display = this.checked ? 'block' : 'none';
+syncRange("letterSpacing","letterVal",(v)=>{
+paperText.style.letterSpacing = v+"px";
 });
 
-let currentPanel = 0;
-const PANEL_COUNT = 4;
+syncRange("wordSpacing","wordVal",(v)=>{
+paperText.style.wordSpacing = v+"px";
+});
 
-function mobNav(dir) {
-    const panels = document.querySelectorAll('.mob-panel');
-    const dots   = document.querySelectorAll('#mob-panel-dots .dot');
+syncRange("topSpacing","topVal",(v)=>{
+paperText.style.paddingTop = v+"px";
+});
 
-    panels[currentPanel].classList.add('hidden');
-    dots[currentPanel].classList.remove('active');
+syncRange("lineSize","lineSizeVal",(v)=>{
+updateLineSize();
+});
 
-    currentPanel = (currentPanel + dir + PANEL_COUNT) % PANEL_COUNT;
+syncRange("fontWeight","weightVal",(v)=>{
+paperText.style.fontWeight = v;
+});
 
-    panels[currentPanel].classList.remove('hidden');
-    dots[currentPanel].classList.add('active');
+document.getElementById("lineType")
+.addEventListener("change",(e)=>{
+applyLineType(e.target.value);
+});
 
-    $id('mob-nav-left').style.opacity  = currentPanel === 0 ? '0.35' : '1';
-    $id('mob-nav-right').style.opacity = currentPanel === PANEL_COUNT - 1 ? '0.35' : '1';
+document.getElementById("textColor")
+.addEventListener("input",(e)=>{
+paperText.style.color = e.target.value;
+previewText.style.color = e.target.value;
+});
+
+document.getElementById("paperColor")
+.addEventListener("input",(e)=>{
+paper.style.backgroundColor = e.target.value;
+});
+
+document.getElementById("shadowToggle")
+.addEventListener("change",(e)=>{
+
+paper.style.boxShadow =
+e.target.checked
+?
+"0 25px 60px rgba(0,0,0,.20), inset 0 0 20px rgba(0,0,0,.05)"
+:
+"none";
+
+});
+
+document.getElementById("marginToggle")
+.addEventListener("change",(e)=>{
+
+document.getElementById("marginLine")
+.style.display =
+e.target.checked ? "block" : "none";
+
+});
+
+/* MOBILE */
+
+mFont.addEventListener("change",()=>{
+
+paperText.style.fontFamily = mFont.value;
+previewText.style.fontFamily = mFont.value;
+
+});
+
+syncRange("mFontSize","mFontVal",(v)=>{
+paperText.style.fontSize = v+"px";
+previewText.style.fontSize = v+"px";
+});
+
+syncRange("mWeight","mWeightVal",(v)=>{
+paperText.style.fontWeight = v;
+});
+
+syncRange("mLineHeight","mLineVal",(v)=>{
+paperText.style.lineHeight = v+"em";
+});
+
+syncRange("mLetter","mLetterVal",(v)=>{
+paperText.style.letterSpacing = v+"px";
+});
+
+syncRange("mWord","mWordVal",(v)=>{
+paperText.style.wordSpacing = v+"px";
+});
+
+syncRange("mTop","mTopVal",(v)=>{
+paperText.style.paddingTop = v+"px";
+});
+
+document.getElementById("mLineType")
+.addEventListener("change",(e)=>{
+applyLineType(e.target.value);
+});
+
+syncRange("mLineSize","mLineSizeVal",(v)=>{
+document.getElementById("lineSize").value = v;
+updateLineSize();
+});
+
+document.getElementById("mPaperColor")
+.addEventListener("input",(e)=>{
+paper.style.backgroundColor = e.target.value;
+});
+
+document.getElementById("mTextColor")
+.addEventListener("input",(e)=>{
+paperText.style.color = e.target.value;
+previewText.style.color = e.target.value;
+});
+
+document.getElementById("mShadow")
+.addEventListener("change",(e)=>{
+
+paper.style.boxShadow =
+e.target.checked
+?
+"0 25px 60px rgba(0,0,0,.20), inset 0 0 20px rgba(0,0,0,.05)"
+:
+"none";
+
+});
+
+document.getElementById("mMargin")
+.addEventListener("change",(e)=>{
+
+document.getElementById("marginLine")
+.style.display =
+e.target.checked ? "block" : "none";
+
+});
+
+/* DRAWERS */
+
+function openDrawer(id){
+
+closeDrawers();
+
+document.getElementById(id)
+.classList.add("open");
+
+overlay.classList.add("show");
+
+document.body.style.overflow="hidden";
+
 }
 
-$id('mob-nav-left').style.opacity = '0.35';
+function closeDrawers(){
 
-function doDownload(btn) {
-    btn.textContent = '⏳ Tayyorlanmoqda...';
-    btn.disabled = true;
-    html2canvas(oqVaroq, {
-        scale: 3,
-        useCORS: true,
-        backgroundColor: oqVaroq.style.backgroundColor || '#ffffff',
-        logging: false
-    }).then(canvas => {
-        const url = canvas.toDataURL('image/jpeg', 0.96);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'husnihat_' + Date.now() + '.jpg';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }).catch(() => {
-        alert("Xatolik yuz berdi. Qayta urinib ko'ring.");
-    }).finally(() => {
-        btn.textContent = '⬇ YUKLAB OLISH';
-        btn.disabled = false;
-    });
+document.querySelectorAll(".drawer")
+.forEach(d=>{
+d.classList.remove("open");
+});
+
+overlay.classList.remove("show");
+
+document.body.style.overflow="";
+
 }
 
-$id('btn-yuklab').addEventListener('click',     function() { doDownload(this); });
-$id('mob-btn-yuklab').addEventListener('click', function() { doDownload(this); });
+overlay.onclick = closeDrawers;
 
-document.querySelector('#cc-matn .cc').classList.add('active');
-document.querySelector('#cc-varoq .cc').classList.add('active');
-outputMatn.style.paddingTop = '40px';
-updateSizePreview('15px');
+/* DOWNLOAD */
+
+function downloadPaper(){
+
+const btns = document.querySelectorAll(".download-btn,#mobileDownload");
+
+btns.forEach(b=>{
+b.innerHTML="⏳";
+});
+
+html2canvas(paper,{
+scale:3,
+useCORS:true,
+backgroundColor:"#ffffff"
+}).then(canvas=>{
+
+const link = document.createElement("a");
+
+link.href = canvas.toDataURL("image/jpeg",0.97);
+
+link.download =
+"husnihat_"+Date.now()+".jpg";
+
+link.click();
+
+}).finally(()=>{
+
+btns.forEach(b=>{
+b.innerHTML="⬇";
+});
+
+});
+
+}
+
+document.getElementById("downloadBtn")
+.addEventListener("click",downloadPaper);
+
+document.getElementById("mobileDownload")
+.addEventListener("click",downloadPaper);
+
+/* INIT */
+
+applyLineType("none");
+
 </script>
+
 </body>
 </html>
